@@ -47,14 +47,14 @@
 
 ## 디자인 토큰
 
-- [ ] T040 `Color+Hex` + `Palette` 48색 **(R6)**
+- [x] T040 `Color+Hex` + `Palette` 35색 **(R6)**
       `design(design-system): Figma 컬러 토큰 48개 추가`
-- [ ] T041 [P] `SweatType` 텍스트 스타일 29개 **(R7)**
+- [x] T041 [P] `SweatType` 텍스트 스타일 29개 **(R7)**
       자간은 `.tracking(-0.02 * size)`로 환산
       `design(design-system): 텍스트 스타일 29개 추가`
-- [ ] T042 [P] `Layout` — Space · Radius
+- [x] T042 [P] `Layout` — Space · Radius
       `design(design-system): 스페이싱·라디우스 토큰 추가`
-- [ ] T043 `DesignSystem/README.md` 매핑 표 (Figma 변수명 · hex · Swift 심볼)
+- [x] T043 `DesignSystem/README.md` 매핑 표 (Figma 변수명 · hex · Swift 심볼)
       `docs(design-system): 토큰 매핑 표 추가`
 
 ## 컴포넌트 5종 — 각각 접근성 포함 (R8, IX)
@@ -112,6 +112,7 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 | 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
 | 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
 | 2026-08-19 | T030 | `SweatStage` 정의. 경계값은 `boundaries` 배열 한 곳. 임시 테스트로 동작 확인 후 원복 |
+| 2026-08-19 | T040~T043 | 컬러 35 · 숫자 13 · 스타일 29. Figma 내보내기에서 스크립트로 생성 후 양방향 대조. **R6의 "48개"는 오기 — 48은 변수 전체, 컬러는 35** |
 | 2026-08-19 | T034·T035 | 6단계 문구·추천 24개 + UX Writing 린트. 역검증에서 `\b`가 한글에 안 먹는 것 발견, 패턴을 "땀 근처 수치"로 교체 |
 | 2026-08-19 | T032·T033 | 테스트 18개 통과. **가드가 실제로 실패하는지 위반을 심어 역검증** — 경계값 리터럴 검사가 `33.0`을 놓쳐 값 비교 방식으로 교체 |
 | 2026-08-19 | T031 | `Sensitivity` + `SweatStageEngine`. 헌법 IV를 시그니처로 강제. **보정값 단위 불일치 발견 → spec 미해결 질문 추가** |

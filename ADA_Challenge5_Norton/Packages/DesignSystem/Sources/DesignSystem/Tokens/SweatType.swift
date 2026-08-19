@@ -1,0 +1,170 @@
+import SwiftUI
+
+/// Figma 텍스트 스타일 하나에 대응하는 값.
+///
+/// SwiftUI에는 Figma의 line-height에 정확히 대응하는 API가 없다.
+/// `lineSpacing`은 줄 사이에 **추가로** 넣는 여백이라, 폰트가 이미 가진
+/// 줄 높이(SF Pro 기준 대략 `size × 1.2`)를 빼서 근사한다.
+///
+/// - Warning: 이 근사는 T055 컴포넌트 카탈로그에서 Figma와 나란히 놓고
+///   눈으로 확인해야 한다. 특히 여러 줄 본문(`body15`, `caption13`)에서
+///   차이가 드러난다.
+public struct SweatTextStyle: Sendable, Equatable {
+
+    /// Figma에서의 이름. 디버깅과 카탈로그 표시에 쓴다.
+    public let figmaName: String
+    public let size: CGFloat
+    public let weight: Font.Weight
+    /// Figma line-height 비율. 130% → 1.3
+    public let lineHeightRatio: CGFloat
+    /// 자간 (pt). Figma의 % 값을 크기에 곱해 환산했다.
+    public let tracking: CGFloat
+
+    public var font: Font { .system(size: size, weight: weight) }
+
+    /// 폰트가 이미 가진 줄 높이를 뺀 나머지. 음수면 0.
+    public var lineSpacing: CGFloat {
+        max(0, size * (lineHeightRatio - 1.2))
+    }
+}
+
+extension View {
+    /// 텍스트 스타일 하나를 폰트·자간·줄간격까지 함께 적용한다.
+    public func sweatType(_ style: SweatTextStyle) -> some View {
+        self.font(style.font)
+            .tracking(style.tracking)
+            .lineSpacing(style.lineSpacing)
+    }
+}
+
+/// Figma `Sweat App` 텍스트 스타일의 코드 미러 (헌법 VIII).
+public enum SweatType {
+    /// `Hero/31` — SF Pro Semibold 31pt / 128% / -2%
+    public static let hero31 = SweatTextStyle(
+        figmaName: "Hero/31", size: 31, weight: .semibold,
+        lineHeightRatio: 1.28, tracking: -0.62)
+    /// `Title/30` — SF Pro Semibold 30pt / 125% / -2%
+    public static let title30 = SweatTextStyle(
+        figmaName: "Title/30", size: 30, weight: .semibold,
+        lineHeightRatio: 1.25, tracking: -0.6)
+    /// `Title/29` — SF Pro Semibold 29pt / 130% / -2%
+    public static let title29 = SweatTextStyle(
+        figmaName: "Title/29", size: 29, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.58)
+    /// `Title/28` — SF Pro Semibold 28pt / 130% / -2%
+    public static let title28 = SweatTextStyle(
+        figmaName: "Title/28", size: 28, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.56)
+    /// `Title/27` — SF Pro Semibold 27pt / 130% / -2%
+    public static let title27 = SweatTextStyle(
+        figmaName: "Title/27", size: 27, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.54)
+    /// `Heading/19` — SF Pro Semibold 19pt / 135% / -2%
+    public static let heading19 = SweatTextStyle(
+        figmaName: "Heading/19", size: 19, weight: .semibold,
+        lineHeightRatio: 1.35, tracking: -0.38)
+    /// `Stat/22` — SF Pro Semibold 22pt / 125% / -2%
+    public static let stat22 = SweatTextStyle(
+        figmaName: "Stat/22", size: 22, weight: .semibold,
+        lineHeightRatio: 1.25, tracking: -0.44)
+    /// `Stat/18` — SF Pro Semibold 18pt / 130% / -2%
+    public static let stat18 = SweatTextStyle(
+        figmaName: "Stat/18", size: 18, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.36)
+    /// `Option/17` — SF Pro Semibold 17pt / 130% / -2%
+    public static let option17 = SweatTextStyle(
+        figmaName: "Option/17", size: 17, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.34)
+    /// `Input/17` — SF Pro Regular 17pt / 130% / -2%
+    public static let input17 = SweatTextStyle(
+        figmaName: "Input/17", size: 17, weight: .regular,
+        lineHeightRatio: 1.3, tracking: -0.34)
+    /// `Button/16` — SF Pro Semibold 16pt / 125% / -2%
+    public static let button16 = SweatTextStyle(
+        figmaName: "Button/16", size: 16, weight: .semibold,
+        lineHeightRatio: 1.25, tracking: -0.32)
+    /// `Body Strong/16` — SF Pro Semibold 16pt / 140% / -2%
+    public static let bodyStrong16 = SweatTextStyle(
+        figmaName: "Body Strong/16", size: 16, weight: .semibold,
+        lineHeightRatio: 1.4, tracking: -0.32)
+    /// `Body/15` — SF Pro Regular 15pt / 160% / -2%
+    public static let body15 = SweatTextStyle(
+        figmaName: "Body/15", size: 15, weight: .regular,
+        lineHeightRatio: 1.6, tracking: -0.3)
+    /// `Body Strong/15` — SF Pro Semibold 15pt / 145% / -2%
+    public static let bodyStrong15 = SweatTextStyle(
+        figmaName: "Body Strong/15", size: 15, weight: .semibold,
+        lineHeightRatio: 1.45, tracking: -0.3)
+    /// `Chip/15` — SF Pro Regular 15pt / 130% / -2%
+    public static let chip15 = SweatTextStyle(
+        figmaName: "Chip/15", size: 15, weight: .regular,
+        lineHeightRatio: 1.3, tracking: -0.3)
+    /// `Body/14` — SF Pro Regular 14pt / 155% / -2%
+    public static let body14 = SweatTextStyle(
+        figmaName: "Body/14", size: 14, weight: .regular,
+        lineHeightRatio: 1.55, tracking: -0.28)
+    /// `Caption/13` — SF Pro Regular 13pt / 160% / -2%
+    public static let caption13 = SweatTextStyle(
+        figmaName: "Caption/13", size: 13, weight: .regular,
+        lineHeightRatio: 1.6, tracking: -0.26)
+    /// `Caption/12` — SF Pro Regular 12pt / 140% / -2%
+    public static let caption12 = SweatTextStyle(
+        figmaName: "Caption/12", size: 12, weight: .regular,
+        lineHeightRatio: 1.4, tracking: -0.24)
+    /// `Tab/10.5` — SF Pro Medium 10.5pt / 120% / 0%
+    public static let tab105 = SweatTextStyle(
+        figmaName: "Tab/10.5", size: 10.5, weight: .medium,
+        lineHeightRatio: 1.2, tracking: 0)
+    /// `Overline/11` — SF Pro Regular 11pt / 130% / 14%
+    public static let overline11 = SweatTextStyle(
+        figmaName: "Overline/11", size: 11, weight: .regular,
+        lineHeightRatio: 1.3, tracking: 1.54)
+    /// `Title/24 Bold` — SF Pro Bold 24pt / 120% / -3%
+    public static let title24Bold = SweatTextStyle(
+        figmaName: "Title/24 Bold", size: 24, weight: .bold,
+        lineHeightRatio: 1.2, tracking: -0.72)
+    /// `Title/22 Bold` — SF Pro Bold 22pt / 120% / -2%
+    public static let title22Bold = SweatTextStyle(
+        figmaName: "Title/22 Bold", size: 22, weight: .bold,
+        lineHeightRatio: 1.2, tracking: -0.44)
+    /// `Stat/20 Bold` — SF Pro Bold 20pt / 120% / -2%
+    public static let stat20Bold = SweatTextStyle(
+        figmaName: "Stat/20 Bold", size: 20, weight: .bold,
+        lineHeightRatio: 1.2, tracking: -0.4)
+    /// `Section/15` — SF Pro Semibold 15pt / 130% / -2%
+    public static let section15 = SweatTextStyle(
+        figmaName: "Section/15", size: 15, weight: .semibold,
+        lineHeightRatio: 1.3, tracking: -0.3)
+    /// `List/16` — SF Pro Medium 16pt / 130% / -2%
+    public static let list16 = SweatTextStyle(
+        figmaName: "List/16", size: 16, weight: .medium,
+        lineHeightRatio: 1.3, tracking: -0.32)
+    /// `List/12.5` — SF Pro Regular 12.5pt / 130% / -2%
+    public static let list125 = SweatTextStyle(
+        figmaName: "List/12.5", size: 12.5, weight: .regular,
+        lineHeightRatio: 1.3, tracking: -0.25)
+    /// `Body/13.5` — SF Pro Regular 13.5pt / 140% / -2%
+    public static let body135 = SweatTextStyle(
+        figmaName: "Body/13.5", size: 13.5, weight: .regular,
+        lineHeightRatio: 1.4, tracking: -0.27)
+    /// `Forecast/16` — SF Pro Semibold 16pt / 125% / -2%
+    public static let forecast16 = SweatTextStyle(
+        figmaName: "Forecast/16", size: 16, weight: .semibold,
+        lineHeightRatio: 1.25, tracking: -0.32)
+    /// `Label/14 Medium` — SF Pro Medium 14pt / 130% / -2%
+    public static let label14Medium = SweatTextStyle(
+        figmaName: "Label/14 Medium", size: 14, weight: .medium,
+        lineHeightRatio: 1.3, tracking: -0.28)
+
+    /// 카탈로그·테스트용 전체 목록.
+    public static let all: [SweatTextStyle] = [
+        hero31, title30, title29, title28,
+        title27, heading19, stat22, stat18,
+        option17, input17, button16, bodyStrong16,
+        body15, bodyStrong15, chip15, body14,
+        caption13, caption12, tab105, overline11,
+        title24Bold, title22Bold, stat20Bold, section15,
+        list16, list125, body135, forecast16,
+        label14Medium,
+    ]
+}
