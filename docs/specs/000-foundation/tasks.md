@@ -33,7 +33,7 @@
 
 - [x] T030 `SweatStage` — 1~6단계, 경계 범위, 상태 라벨. **경계값은 여기에만 존재한다** **(R5)**
       `feat(domain): 땀 불편 6단계 정의 추가`
-- [ ] T031 [P] `Sensitivity` + `SweatStageEngine.stage(apparentTemp:sensitivity:calibration:)` **(R3)**
+- [x] T031 [P] `Sensitivity` + `SweatStageEngine.stage(apparentTemp:sensitivity:calibration:)` **(R3)**
       시그니처에 습도·풍속을 받지 않는다 **(R4)**
       `feat(domain): 체감온도 기반 단계 산출 엔진 추가`
 - [ ] T032 [P] 경계값 전수 테스트 + 경계 리터럴 산재 검사 + 매니페스트 의존성 검사 **(R2, R3, R5)**
@@ -112,3 +112,4 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 | 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
 | 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
 | 2026-08-19 | T030 | `SweatStage` 정의. 경계값은 `boundaries` 배열 한 곳. 임시 테스트로 동작 확인 후 원복 |
+| 2026-08-19 | T031 | `Sensitivity` + `SweatStageEngine`. 헌법 IV를 시그니처로 강제. **보정값 단위 불일치 발견 → spec 미해결 질문 추가** |
