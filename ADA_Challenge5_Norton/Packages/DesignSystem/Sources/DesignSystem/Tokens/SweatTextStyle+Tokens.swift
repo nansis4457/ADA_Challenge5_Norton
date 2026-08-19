@@ -6,9 +6,13 @@ import SwiftUI
 /// `lineSpacing`은 줄 사이에 **추가로** 넣는 여백이라, 폰트가 이미 가진
 /// 줄 높이(SF Pro 기준 대략 `size × 1.2`)를 빼서 근사한다.
 ///
-/// - Warning: 이 근사는 T055 컴포넌트 카탈로그에서 Figma와 나란히 놓고
-///   눈으로 확인해야 한다. 특히 여러 줄 본문(`body15`, `caption13`)에서
-///   차이가 드러난다.
+/// `lineSpacing`은 한 `Text` **안의 줄 사이**에만 들어간다. 한 줄짜리 텍스트에는
+/// 아무 효과가 없으므로, 같은 문구라도 Figma보다 상자가 작다.
+/// Selectable Card 기준 Figma 77.9pt 대 SwiftUI 70.7pt.
+///
+/// - Note: **의도된 차이다.** SwiftUI 기본 조판을 따르기로 결정했다 (2026-08-19).
+///   Figma의 프레임 높이는 참고값이며 구현 목표가 아니다.
+///   간격과 순서를 맞추고 높이는 콘텐츠가 정하게 둔다.
 public struct SweatTextStyle: Sendable, Equatable {
 
     /// Figma에서의 이름. 디버깅과 카탈로그 표시에 쓴다.
