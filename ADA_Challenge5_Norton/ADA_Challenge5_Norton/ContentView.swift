@@ -4,20 +4,18 @@
 //
 
 import SwiftUI
-
-// 로컬 패키지 링크 확인용 import. 001에서 실제 화면으로 교체된다.
 import DesignSystem
 import SweatDomain
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        #if DEBUG
+        // 001에서 실제 화면으로 교체된다.
+        // 그때까지는 디자인 시스템 대조용 카탈로그를 띄운다.
+        ComponentCatalogView()
+        #else
+        Color(.clear)
+        #endif
     }
 }
 

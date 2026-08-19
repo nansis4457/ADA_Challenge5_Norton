@@ -69,7 +69,7 @@
       `design(design-system): Score Button 컴포넌트 추가`
 - [x] T054 [P] `SweatTextField`
       `design(design-system): Text Field 컴포넌트 추가`
-- [ ] T055 `ComponentCatalogView` + Preview — Figma 대조용
+- [x] T055 `ComponentCatalogView` + Preview — Figma 대조용
       `design(design-system): 컴포넌트 카탈로그 화면 추가`
 
 ## 린트
@@ -112,6 +112,7 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 | 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
 | 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
 | 2026-08-19 | T030 | `SweatStage` 정의. 경계값은 `boundaries` 배열 한 곳. 임시 테스트로 동작 확인 후 원복 |
+| 2026-08-19 | T055 | 카탈로그 + 시뮬레이터 실행. **줄높이 근사가 단일 행에는 무효 — 카드당 약 7pt 차이** 발견 |
 | 2026-08-19 | T052~T054 | Selectable Card · Score Button · Text Field. 토큰 밖 여백이 18·14·15로 더 나옴 |
 | 2026-08-19 | T050·T051 | Button 3종 · Chip 2종. **토큰이 Dynamic Type을 안 따르던 것 발견 → `@ScaledMetric` 적용**. 시각 검증은 T055 카탈로그에서 |
 | 2026-08-19 | T040~T043 | 컬러 35 · 숫자 13 · 스타일 29. Figma 내보내기에서 스크립트로 생성 후 양방향 대조. **R6의 "48개"는 오기 — 48은 변수 전체, 컬러는 35** |
