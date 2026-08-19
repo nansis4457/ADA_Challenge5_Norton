@@ -139,11 +139,24 @@ Xcode 26의 `SWIFT_APPROACHABLE_CONCURRENCY`가 이미 켜져 있다.
 Swift 6 언어 모드에서 완전 검사가 기본이라 중복이기 때문이다.
 그럼에도 명시해 둔 이유는, 누군가 언어 모드를 5로 되돌려도 안전망이 남게 하기 위함이다.
 
-> ⚠️ **T011에서 확인할 것** — 로컬 SPM 패키지는 Xcode 프로젝트의 타깃 빌드 설정을
-> 상속하지 않으므로, `SweatDomain`은 별도 조치 없이 nonisolated가 기본일 가능성이 높다.
-> **추정하지 말고 T020에서 패키지를 만든 직후 빌드 로그의 `-default-isolation` 유무로 확인한다.**
-> 만약 MainActor가 새어 들어오면, 매니페스트의 `swiftSettings`로 끄거나
-> 모든 공개 타입에 `nonisolated`를 명시하는 방식으로 대체한다.
+### T011 결론 (빌드 로그 실측, 2026-08-19)
+
+로컬 SPM 패키지는 Xcode 타깃의 빌드 설정을 **상속하지 않는다.** 확인된 결과는 다음과 같다.
+
+| 대상 | `-default-isolation` | 결과 |
+|---|---|---|
+| 앱 타깃 | `MainActor` | 빌드 설정에서 상속 |
+| `DesignSystem` | `MainActor` | 매니페스트에 `.defaultIsolation(MainActor.self)` **명시 필요** |
+| `SweatDomain` | 없음 | 조치 없이 nonisolated가 기본 — 원하던 대로 |
+
+따라서 도메인에 `nonisolated`를 일일이 붙이는 대체안은 필요하지 않다.
+`DesignSystem`만 매니페스트에서 명시하면 된다.
+
+확인 방법 (재현용):
+
+```bash
+cd Packages/<패키지> && rm -rf .build && swift build --verbose 2>&1 | grep default-isolation
+```
 
 ---
 
