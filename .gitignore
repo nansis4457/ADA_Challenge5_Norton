@@ -1,0 +1,22 @@
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# SPM
+.swiftpm/
+.build/
+Package.resolved
+
+# Secrets — 공공데이터포털 인증키 등
+Secrets.xcconfig
+*.local.xcconfig
+
+# macOS
+.DS_Store
