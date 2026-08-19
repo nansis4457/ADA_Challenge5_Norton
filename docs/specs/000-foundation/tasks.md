@@ -31,7 +31,7 @@
 
 ## 도메인
 
-- [ ] T030 `SweatStage` — 1~6단계, 경계 범위, 상태 라벨. **경계값은 여기에만 존재한다** **(R5)**
+- [x] T030 `SweatStage` — 1~6단계, 경계 범위, 상태 라벨. **경계값은 여기에만 존재한다** **(R5)**
       `feat(domain): 땀 불편 6단계 정의 추가`
 - [ ] T031 [P] `Sensitivity` + `SweatStageEngine.stage(apparentTemp:sensitivity:calibration:)` **(R3)**
       시그니처에 습도·풍속을 받지 않는다 **(R4)**
@@ -111,3 +111,4 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 | 2026-08-19 | T011 | 패키지는 타깃 설정을 상속하지 않음을 실측. DesignSystem만 MainActor 명시 |
 | 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
 | 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
+| 2026-08-19 | T030 | `SweatStage` 정의. 경계값은 `boundaries` 배열 한 곳. 임시 테스트로 동작 확인 후 원복 |
