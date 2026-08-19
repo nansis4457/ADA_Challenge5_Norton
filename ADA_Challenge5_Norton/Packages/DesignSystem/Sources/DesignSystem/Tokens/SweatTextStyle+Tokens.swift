@@ -20,6 +20,8 @@ public struct SweatTextStyle: Sendable, Equatable {
     /// 자간 (pt). Figma의 % 값을 크기에 곱해 환산했다.
     public let tracking: CGFloat
 
+    /// 고정 크기 폰트. **Dynamic Type을 따르지 않는다.**
+    /// 화면에서는 이 값을 직접 쓰지 말고 `.sweatType(_:)`을 쓴다.
     public var font: Font { .system(size: size, weight: weight) }
 
     /// 폰트가 이미 가진 줄 높이를 뺀 나머지. 음수면 0.
@@ -28,17 +30,40 @@ public struct SweatTextStyle: Sendable, Equatable {
     }
 }
 
-extension View {
-    /// 텍스트 스타일 하나를 폰트·자간·줄간격까지 함께 적용한다.
-    public func sweatType(_ style: SweatTextStyle) -> some View {
-        self.font(style.font)
-            .tracking(style.tracking)
-            .lineSpacing(style.lineSpacing)
+/// 폰트·자간·줄간격을 함께 적용하고 Dynamic Type에 맞춰 확대한다.
+///
+/// `Font.system(size:)`는 고정 크기라 **Dynamic Type을 따르지 않는다.**
+/// 접근성 설정을 키워도 글자가 그대로면 헌법 IX 위반이므로,
+/// `@ScaledMetric`으로 배율을 얻어 크기·자간·줄간격에 함께 곱한다.
+/// 자간과 줄간격도 같이 곱해야 글자만 커지고 간격은 그대로인 어색한 상태를 피한다.
+private struct SweatTypeModifier: ViewModifier {
+    let style: SweatTextStyle
+
+    /// 본문 기준 Dynamic Type 배율. 기본 크기에서 1.0이다.
+    @ScaledMetric(relativeTo: .body) private var scale: CGFloat = 1
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: style.size * scale, weight: style.weight))
+            .tracking(style.tracking * scale)
+            .lineSpacing(style.lineSpacing * scale)
     }
 }
 
-/// Figma `Sweat App` 텍스트 스타일의 코드 미러 (헌법 VIII).
-public enum SweatType {
+extension View {
+    /// 텍스트 스타일 하나를 폰트·자간·줄간격까지 함께 적용한다.
+    ///
+    /// Dynamic Type 배율이 자동으로 반영된다.
+    public func sweatType(_ style: SweatTextStyle) -> some View {
+        modifier(SweatTypeModifier(style: style))
+    }
+}
+
+// Figma `Sweat App` 텍스트 스타일의 코드 미러 (헌법 VIII).
+//
+// 정적 멤버를 SweatTextStyle 위에 두어야 `.sweatType(.hero31)` 단축 문법이 동작한다.
+// 별도 네임스페이스(SweatType)에 두면 타입이 달라 점 문법을 쓸 수 없다.
+extension SweatTextStyle {
     /// `Hero/31` — SF Pro Semibold 31pt / 128% / -2%
     public static let hero31 = SweatTextStyle(
         figmaName: "Hero/31", size: 31, weight: .semibold,

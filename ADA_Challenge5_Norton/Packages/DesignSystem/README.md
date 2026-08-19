@@ -104,37 +104,37 @@ Text("오늘은 땀이 많이 날 수 있어요")
 
 모두 SF Pro. 한글은 시스템이 Apple SD Gothic Neo로 대체하므로 커스텀 폰트를 등록하지 않는다.
 
-| Figma | 굵기 | 크기 | 줄높이 | 자간 | Swift |
+| Figma | 굵기 | 크기 | 줄높이 | 자간 | Swift (`.sweatType(…)`) |
 |---|---|---|---|---|---|
-| `Hero/31` | Semibold | 31 | 128% | -2% | `SweatType.hero31` |
-| `Title/30` | Semibold | 30 | 125% | -2% | `SweatType.title30` |
-| `Title/29` | Semibold | 29 | 130% | -2% | `SweatType.title29` |
-| `Title/28` | Semibold | 28 | 130% | -2% | `SweatType.title28` |
-| `Title/27` | Semibold | 27 | 130% | -2% | `SweatType.title27` |
-| `Heading/19` | Semibold | 19 | 135% | -2% | `SweatType.heading19` |
-| `Stat/22` | Semibold | 22 | 125% | -2% | `SweatType.stat22` |
-| `Stat/18` | Semibold | 18 | 130% | -2% | `SweatType.stat18` |
-| `Option/17` | Semibold | 17 | 130% | -2% | `SweatType.option17` |
-| `Input/17` | Regular | 17 | 130% | -2% | `SweatType.input17` |
-| `Button/16` | Semibold | 16 | 125% | -2% | `SweatType.button16` |
-| `Body Strong/16` | Semibold | 16 | 140% | -2% | `SweatType.bodyStrong16` |
-| `Body/15` | Regular | 15 | 160% | -2% | `SweatType.body15` |
-| `Body Strong/15` | Semibold | 15 | 145% | -2% | `SweatType.bodyStrong15` |
-| `Chip/15` | Regular | 15 | 130% | -2% | `SweatType.chip15` |
-| `Body/14` | Regular | 14 | 155% | -2% | `SweatType.body14` |
-| `Caption/13` | Regular | 13 | 160% | -2% | `SweatType.caption13` |
-| `Caption/12` | Regular | 12 | 140% | -2% | `SweatType.caption12` |
-| `Tab/10.5` | Medium | 10.5 | 120% | 0% | `SweatType.tab105` |
-| `Overline/11` | Regular | 11 | 130% | 14% | `SweatType.overline11` |
-| `Title/24 Bold` | Bold | 24 | 120% | -3% | `SweatType.title24Bold` |
-| `Title/22 Bold` | Bold | 22 | 120% | -2% | `SweatType.title22Bold` |
-| `Stat/20 Bold` | Bold | 20 | 120% | -2% | `SweatType.stat20Bold` |
-| `Section/15` | Semibold | 15 | 130% | -2% | `SweatType.section15` |
-| `List/16` | Medium | 16 | 130% | -2% | `SweatType.list16` |
-| `List/12.5` | Regular | 12.5 | 130% | -2% | `SweatType.list125` |
-| `Body/13.5` | Regular | 13.5 | 140% | -2% | `SweatType.body135` |
-| `Forecast/16` | Semibold | 16 | 125% | -2% | `SweatType.forecast16` |
-| `Label/14 Medium` | Medium | 14 | 130% | -2% | `SweatType.label14Medium` |
+| `Hero/31` | Semibold | 31 | 128% | -2% | `.hero31` |
+| `Title/30` | Semibold | 30 | 125% | -2% | `.title30` |
+| `Title/29` | Semibold | 29 | 130% | -2% | `.title29` |
+| `Title/28` | Semibold | 28 | 130% | -2% | `.title28` |
+| `Title/27` | Semibold | 27 | 130% | -2% | `.title27` |
+| `Heading/19` | Semibold | 19 | 135% | -2% | `.heading19` |
+| `Stat/22` | Semibold | 22 | 125% | -2% | `.stat22` |
+| `Stat/18` | Semibold | 18 | 130% | -2% | `.stat18` |
+| `Option/17` | Semibold | 17 | 130% | -2% | `.option17` |
+| `Input/17` | Regular | 17 | 130% | -2% | `.input17` |
+| `Button/16` | Semibold | 16 | 125% | -2% | `.button16` |
+| `Body Strong/16` | Semibold | 16 | 140% | -2% | `.bodyStrong16` |
+| `Body/15` | Regular | 15 | 160% | -2% | `.body15` |
+| `Body Strong/15` | Semibold | 15 | 145% | -2% | `.bodyStrong15` |
+| `Chip/15` | Regular | 15 | 130% | -2% | `.chip15` |
+| `Body/14` | Regular | 14 | 155% | -2% | `.body14` |
+| `Caption/13` | Regular | 13 | 160% | -2% | `.caption13` |
+| `Caption/12` | Regular | 12 | 140% | -2% | `.caption12` |
+| `Tab/10.5` | Medium | 10.5 | 120% | 0% | `.tab105` |
+| `Overline/11` | Regular | 11 | 130% | 14% | `.overline11` |
+| `Title/24 Bold` | Bold | 24 | 120% | -3% | `.title24Bold` |
+| `Title/22 Bold` | Bold | 22 | 120% | -2% | `.title22Bold` |
+| `Stat/20 Bold` | Bold | 20 | 120% | -2% | `.stat20Bold` |
+| `Section/15` | Semibold | 15 | 130% | -2% | `.section15` |
+| `List/16` | Medium | 16 | 130% | -2% | `.list16` |
+| `List/12.5` | Regular | 12.5 | 130% | -2% | `.list125` |
+| `Body/13.5` | Regular | 13.5 | 140% | -2% | `.body135` |
+| `Forecast/16` | Semibold | 16 | 125% | -2% | `.forecast16` |
+| `Label/14 Medium` | Medium | 14 | 130% | -2% | `.label14Medium` |
 
 ### 줄높이에 대한 주의
 
