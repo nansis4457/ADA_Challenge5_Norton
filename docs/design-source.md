@@ -88,6 +88,20 @@ space/4          → Space.x4
 
 ---
 
+## 높이는 Figma를 따르지 않는다
+
+**결정 2026-08-19** — SwiftUI 기본 조판을 따른다.
+
+SwiftUI에는 Figma의 line-height에 대응하는 API가 없다. `lineSpacing`은 한 `Text`
+안의 줄 사이에만 들어가므로 한 줄짜리 텍스트에는 효과가 없고, 그만큼 상자가 작다.
+Selectable Card 기준 Figma 77.9pt 대 SwiftUI 70.7pt.
+
+화면을 구현할 때 **Figma의 프레임 높이를 목표로 삼지 않는다.**
+간격(`Space.*`)과 요소 순서를 맞추고, 높이는 콘텐츠가 정하게 둔다.
+`.frame(height:)`로 Figma 값에 맞추면 Dynamic Type에서 글자가 먼저 잘린다.
+
+---
+
 ## 알려진 제약
 
 Figma 인스턴스는 하위 레이어 크기를 변경할 수 없다.

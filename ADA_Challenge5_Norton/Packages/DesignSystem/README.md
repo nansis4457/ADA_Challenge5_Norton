@@ -146,8 +146,12 @@ SwiftUI에는 Figma의 line-height에 정확히 대응하는 API가 없다.
 lineSpacing = max(0, size * (lineHeightRatio - 1.2))
 ```
 
-여러 줄 본문에서 Figma와 차이가 날 수 있다. T055 컴포넌트 카탈로그에서
-Figma와 나란히 놓고 확인한다.
+`lineSpacing`은 한 `Text` **안의 줄 사이**에만 들어간다. 한 줄짜리 텍스트에는
+효과가 없어 Figma보다 상자가 작다 (Selectable Card 기준 77.9pt 대 70.7pt).
+
+**의도된 차이다.** SwiftUI 기본 조판을 따르기로 결정했다 (2026-08-19).
+Figma의 프레임 높이는 참고값이며 구현 목표가 아니다.
+화면을 만들 때 간격(`Space.*`)과 순서를 맞추고, 높이는 콘텐츠가 정하게 둔다.
 
 ### 자간
 
