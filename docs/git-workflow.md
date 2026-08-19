@@ -171,6 +171,16 @@ docs/specs/002-home/spec.md
 ## 5. 커밋 전 체크리스트
 
 ```bash
+# 디자인 토큰 검사 (헌법 VIII)
+./Scripts/lint-tokens.sh
+```
+
+```bash
+# 도메인 테스트 — 시뮬레이터 불필요, 1초 이내
+cd ADA_Challenge5_Norton/Packages/SweatDomain && swift test
+```
+
+```bash
 # 빌드
 xcodebuild -project ADA_Challenge5_Norton/ADA_Challenge5_Norton.xcodeproj \
   -scheme ADA_Challenge5_Norton -destination 'generic/platform=iOS Simulator' build
