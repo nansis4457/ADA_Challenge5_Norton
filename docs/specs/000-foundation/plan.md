@@ -125,9 +125,25 @@ Xcode 26의 `SWIFT_APPROACHABLE_CONCURRENCY`가 이미 켜져 있다.
 - 앱 타깃 · `DesignSystem` → 기본 격리 `MainActor`
 - `SweatDomain` → 기본 격리 없음(`nonisolated`). 모든 공개 타입은 `Sendable`
 
-> ⚠️ **구현 시 확인** — SwiftPM에서 패키지별 기본 격리를 지정하는 정확한 빌드 설정 이름과
-> 사용법을 T011에서 툴체인으로 검증한다. 문서 기억에 의존해 쓰지 않는다.
-> 설정이 여의치 않으면 `SweatDomain`의 모든 타입에 `nonisolated`를 명시하는 방식으로 대체한다.
+### T010에서 확인된 사실 (빌드 로그 실측)
+
+앱 타깃에 이미 다음이 걸려 있고, 실제 컴파일러 플래그로 전달되는 것을 확인했다.
+
+| 빌드 설정 | 전달된 플래그 |
+|---|---|
+| `SWIFT_VERSION = 6.0` | `-swift-version 6` |
+| `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` | `-default-isolation=MainActor` |
+| `SWIFT_APPROACHABLE_CONCURRENCY = YES` | `-enable-upcoming-feature NonisolatedNonsendingByDefault`, `-enable-upcoming-feature InferIsolatedConformances` |
+
+`SWIFT_STRICT_CONCURRENCY = complete`는 별도 플래그로 나타나지 않는다.
+Swift 6 언어 모드에서 완전 검사가 기본이라 중복이기 때문이다.
+그럼에도 명시해 둔 이유는, 누군가 언어 모드를 5로 되돌려도 안전망이 남게 하기 위함이다.
+
+> ⚠️ **T011에서 확인할 것** — 로컬 SPM 패키지는 Xcode 프로젝트의 타깃 빌드 설정을
+> 상속하지 않으므로, `SweatDomain`은 별도 조치 없이 nonisolated가 기본일 가능성이 높다.
+> **추정하지 말고 T020에서 패키지를 만든 직후 빌드 로그의 `-default-isolation` 유무로 확인한다.**
+> 만약 MainActor가 새어 들어오면, 매니페스트의 `swiftSettings`로 끄거나
+> 모든 공개 타입에 `nonisolated`를 명시하는 방식으로 대체한다.
 
 ---
 
