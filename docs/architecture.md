@@ -294,14 +294,21 @@ struct MoveActivityAttributes: ActivityAttributes {
 
 ## 10. 데이터 모델
 
+**프로필은 SwiftData가 아니다.** 스칼라 몇 개뿐이라 키-값 저장이 맞다.
+SwiftData는 날짜별 레코드를 쌓고 조회·집계해야 하는 `SweatLog`에만 쓴다.
+이렇게 나누면 001에서 005로 넘어갈 때 마이그레이션이 생기지 않는다.
+*(결정 2026-08-19 — 001 착수 시. 이전 판에는 UserProfile도 `@Model`이었다.)*
+
 ```swift
-@Model final class UserProfile {
-    var sensitivity: String
-    var transport: String
-    var outdoorDuration: String
+// 키-값 저장. 소유는 SweatPersistence.
+struct UserProfile: Codable, Sendable {
+    var sensitivity: Sensitivity
+    var transport: Transport
+    var outdoorDuration: OutdoorDuration
     var calibrationOffset: Double
     var humidityBoost: Double
     var notificationHour: Int
+    var hasCompletedOnboarding: Bool
 }
 
 @Model final class SweatLog {
