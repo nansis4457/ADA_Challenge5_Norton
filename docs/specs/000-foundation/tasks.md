@@ -18,15 +18,15 @@
 
 - [x] T010 `SWIFT_VERSION` 5.0 → 6.0, 빌드 경고 0 확인 **(R1)**
       `chore: Swift 6 언어 모드로 전환`
-- [ ] T011 기본 액터 격리 방침 적용 — 앱·DesignSystem은 MainActor, SweatDomain은 nonisolated
+- [x] T011 기본 액터 격리 방침 적용 — 앱·DesignSystem은 MainActor, SweatDomain은 nonisolated
       계획 §5의 확인 사항을 툴체인으로 검증하고, 결과를 plan.md에 반영한다
       `chore: 타깃별 기본 액터 격리 설정`
 
 ## 패키지 골격
 
-- [ ] T020 `Packages/SweatDomain` 생성 + 프로젝트에 로컬 패키지로 링크 **(R2)**
+- [x] T020 `Packages/SweatDomain` 생성 + 프로젝트에 로컬 패키지로 링크 **(R2)**
       `chore(domain): SweatDomain 패키지 추가`
-- [ ] T021 `Packages/DesignSystem` 생성 + 링크
+- [x] T021 `Packages/DesignSystem` 생성 + 링크
       `chore(design-system): DesignSystem 패키지 추가`
 
 ## 도메인
@@ -108,3 +108,6 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 |---|---|---|
 | 2026-08-19 | T001 | |
 | 2026-08-19 | T010 | 클린 빌드 성공, 컴파일러 경고 0. `-swift-version 6` 실측 확인 |
+| 2026-08-19 | T011 | 패키지는 타깃 설정을 상속하지 않음을 실측. DesignSystem만 MainActor 명시 |
+| 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
+| 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
