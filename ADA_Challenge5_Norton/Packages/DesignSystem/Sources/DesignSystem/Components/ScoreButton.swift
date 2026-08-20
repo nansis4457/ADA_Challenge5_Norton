@@ -21,7 +21,7 @@ public struct ScoreButton: View {
                 .sweatType(Self.numberType)
                 .foregroundStyle(isSelected ? OnColor.accent : Ink.n900)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, Self.verticalPadding)
+                .padding(.vertical, Space.x4)
         }
         .buttonStyle(SelectableSurfaceStyle(
             isSelected: isSelected,
@@ -35,14 +35,12 @@ public struct ScoreButton: View {
 
     /// - Note: Figma의 Score Button 숫자는 텍스트 스타일에 연결되어 있지 않다.
     ///   Semibold 20 / 자간 -2%를 직접 지정한 값이라 여기서도 같은 값을 만든다.
-    ///   `Stat/20 Bold`는 Bold라 굵기가 다르다. 토큰 갭으로 기록해 둔다.
+    ///   `Stat/20 Bold`는 Bold라 굵기가 다르다. **아직 열려 있는 토큰 갭이다** —
+    ///   Figma에 Semibold 20 스타일을 추가하거나 Bold로 통일해야 한다.
     private static let numberType = SweatTextStyle(
         figmaName: "Score Button 숫자",
         size: 20, weight: .semibold, lineHeightRatio: 1.2, tracking: -0.4
     )
-
-    /// - Note: Figma 상하 여백 18. `space/*`에 없다 (16과 22 사이).
-    private static let verticalPadding: CGFloat = 18
 }
 
 #Preview("Score Button") {

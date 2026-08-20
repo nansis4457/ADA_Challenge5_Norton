@@ -47,15 +47,10 @@ public struct SweatButton: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, Space.x4)
-                .padding(.horizontal, Self.horizontalPadding)
+                .padding(.horizontal, Space.x5)
         }
         .buttonStyle(SweatButtonStyle(style: style))
     }
-
-    /// - Note: Figma 컴포넌트의 좌우 여백은 20이며 `space/*` 토큰에 없는 값이다.
-    ///   전체폭·중앙정렬이라 시각적 영향은 사실상 없지만, 토큰 갭으로 남겨둔다.
-    ///   Figma를 22(`space/5`)로 맞추거나 토큰을 추가하면 이 상수는 사라진다.
-    private static let horizontalPadding: CGFloat = 20
 }
 
 private struct SweatButtonStyle: ButtonStyle {
