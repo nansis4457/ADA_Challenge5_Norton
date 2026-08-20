@@ -6,11 +6,11 @@
 | # | 스펙 | 화면 | 상태 | 브랜치 |
 |---|---|---|---|---|
 | 000 | [파운데이션](000-foundation/spec.md) — Swift 6 전환, 디자인 시스템, 등급 엔진 | — | **Implemented** | `000-foundation` |
-| 001 | [온보딩](001-onboarding/spec.md) | 01–03 | Draft | `001-onboarding` |
+| 001 | [온보딩](001-onboarding/spec.md) | 01–03 | **Implemented** | `001-onboarding` |
 
 > **줄높이 처리 방식은 결정됐다** — SwiftUI 기본 조판을 따른다 (`docs/design-source.md`).
 > 남은 둘(토큰 밖 여백 · Chip 터치 타깃)은 001의 `spec.md`의 구현 계획를 쓰기 전에 정한다.
-| 002 | 홈 · 땀 등급 + 등급 상세 | 04, 05 | 미작성 | |
+| 002 | [홈 · 등급 상세](002-home/spec.md) | 04, 05 | Draft · **블로커 있음** | `002-home` |
 | 003 | 지도 · 경로 · 실내외 비율 | 06–08 | 미작성 | |
 | 004 | 이동 중 (Live Activity) | 09 | 미작성 | |
 | 005 | 마이페이지 · 자가 기록 · 지수 개선 | 10–12 | 미작성 | |

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA0200000000000000000006 /* SweatFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = AA0200000000000000000004 /* SweatFeatures */; };
+		AA0200000000000000000005 /* SweatPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = AA0200000000000000000003 /* SweatPersistence */; };
 		AA0100000000000000000006 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA0100000000000000000004 /* DesignSystem */; };
 		AA0100000000000000000005 /* SweatDomain in Frameworks */ = {isa = PBXBuildFile; productRef = AA0100000000000000000003 /* SweatDomain */; };
 /* End PBXBuildFile section */
@@ -29,6 +31,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0100000000000000000006 /* DesignSystem in Frameworks */,
+				AA0200000000000000000006 /* SweatFeatures in Frameworks */,
+				AA0200000000000000000005 /* SweatPersistence in Frameworks */,
 				AA0100000000000000000005 /* SweatDomain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +77,8 @@
 			name = ADA_Challenge5_Norton;
 			packageProductDependencies = (
 				AA0100000000000000000004 /* DesignSystem */,
+				AA0200000000000000000004 /* SweatFeatures */,
+				AA0200000000000000000003 /* SweatPersistence */,
 				AA0100000000000000000003 /* SweatDomain */,
 			);
 			productName = ADA_Challenge5_Norton;
@@ -106,6 +112,8 @@
 			preferredProjectObjectVersion = 77;
 			packageReferences = (
 				AA0100000000000000000002 /* XCLocalSwiftPackageReference "Packages/DesignSystem" */,
+				AA0200000000000000000002 /* XCLocalSwiftPackageReference "Packages/SweatFeatures" */,
+				AA0200000000000000000001 /* XCLocalSwiftPackageReference "Packages/SweatPersistence" */,
 				AA0100000000000000000001 /* XCLocalSwiftPackageReference "Packages/SweatDomain" */,
 			);
 			productRefGroup = 032EDC37303532A20081EADE /* Products */;
@@ -357,6 +365,14 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/SweatDomain;
 		};
+		AA0200000000000000000002 /* XCLocalSwiftPackageReference "Packages/SweatFeatures" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/SweatFeatures;
+		};
+		AA0200000000000000000001 /* XCLocalSwiftPackageReference "Packages/SweatPersistence" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/SweatPersistence;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -367,6 +383,14 @@
 		AA0100000000000000000003 /* SweatDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SweatDomain;
+		};
+		AA0200000000000000000004 /* SweatFeatures */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SweatFeatures;
+		};
+		AA0200000000000000000003 /* SweatPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SweatPersistence;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
