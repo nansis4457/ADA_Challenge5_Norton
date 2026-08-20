@@ -15,7 +15,8 @@ import SwiftUI
 ///
 /// 1. **줄높이** — SwiftUI에는 Figma line-height에 대응하는 API가 없어
 ///    `size × (ratio − 1.2)`로 근사했다. 여러 줄 본문에서 차이가 드러난다.
-/// 2. **터치 타깃** — Chip이 37pt로 HIG 최소치 44pt에 못 미친다.
+/// 2. **터치 타깃** — Chip은 보이는 크기 37pt, 탭 영역 44pt다.
+///    칩 자체가 커지지 않았는지 확인한다.
 public struct ComponentCatalogView: View {
 
     @State private var selectedChip = "지하철"
@@ -90,7 +91,7 @@ public struct ComponentCatalogView: View {
     }
 
     private var chips: some View {
-        section("Chip", "터치 타깃 37pt — HIG 최소 44pt 미달") {
+        section("Chip", "보이는 크기 37pt · 탭 영역 44pt") {
             VStack(alignment: .leading, spacing: Space.x2) {
                 ForEach([["도보", "지하철", "버스", "자전거"],
                          ["20분 이하", "20~40분", "40분 이상"]], id: \.self) { row in
