@@ -100,7 +100,7 @@ Text("오늘은 땀이 많이 날 수 있어요")
 
 ---
 
-## 텍스트 스타일 — 29개
+## 텍스트 스타일 — 30개
 
 모두 SF Pro. 한글은 시스템이 Apple SD Gothic Neo로 대체하므로 커스텀 폰트를 등록하지 않는다.
 
@@ -129,6 +129,7 @@ Text("오늘은 땀이 많이 날 수 있어요")
 | `Title/24 Bold` | Bold | 24 | 120% | -3% | `.title24Bold` |
 | `Title/22 Bold` | Bold | 22 | 120% | -2% | `.title22Bold` |
 | `Stat/20 Bold` | Bold | 20 | 120% | -2% | `.stat20Bold` |
+| `Stat/20` | Semibold | 20 | 120% | -2% | `.stat20` |
 | `Section/15` | Semibold | 15 | 130% | -2% | `.section15` |
 | `List/16` | Medium | 16 | 130% | -2% | `.list16` |
 | `List/12.5` | Regular | 12.5 | 130% | -2% | `.list125` |

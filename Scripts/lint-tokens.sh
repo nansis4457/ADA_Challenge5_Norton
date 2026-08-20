@@ -17,8 +17,7 @@ cd "$(dirname "$0")/.."
 
 TARGETS=(
   "ADA_Challenge5_Norton/ADA_Challenge5_Norton"
-  # 001부터 추가:
-  # "ADA_Challenge5_Norton/Packages/SweatFeatures/Sources"
+  "ADA_Challenge5_Norton/Packages/SweatFeatures/Sources"
 )
 
 errors=0

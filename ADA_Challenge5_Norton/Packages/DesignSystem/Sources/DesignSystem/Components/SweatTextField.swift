@@ -28,8 +28,8 @@ public struct SweatTextField: View {
                 .foregroundStyle(Ink.n900)
                 .tint(Accent.base)
                 .textFieldStyle(.plain)
-                .padding(.vertical, Self.verticalPadding)
-                .padding(.horizontal, Self.horizontalPadding)
+                .padding(.vertical, Space.x4)
+                .padding(.horizontal, Space.x4)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     Surface.card,
@@ -39,10 +39,6 @@ public struct SweatTextField: View {
                 .accessibilityLabel(label)
         }
     }
-
-    /// - Note: Figma 여백 14 / 15. 둘 다 `space/*`에 없다 (12과 16 사이).
-    private static let verticalPadding: CGFloat = 14
-    private static let horizontalPadding: CGFloat = 15
 }
 
 #Preview("Text Field") {

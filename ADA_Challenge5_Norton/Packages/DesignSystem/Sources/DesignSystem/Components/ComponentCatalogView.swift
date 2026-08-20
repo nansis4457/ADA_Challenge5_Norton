@@ -1,7 +1,14 @@
-#if DEBUG
 import SwiftUI
 
-/// 디자인 시스템 대조용 카탈로그. **디버그 빌드 전용.**
+/// 디자인 시스템 대조용 카탈로그.
+///
+/// - Important: **`#if DEBUG`로 감싸지 않는다.** 감싸면 SwiftUI 프리뷰 빌드가
+///   깨진다. 프리뷰용 dylib를 만들 때 앱 타깃과 패키지의 컴파일 조건이 항상
+///   같지는 않아, 앱은 이 타입을 참조하는데 패키지에는 심볼이 없는 상태가 된다
+///   (`Undefined symbol: DesignSystem.ComponentCatalogView.init()`).
+///
+///   릴리스 빌드에 노출되지 않게 하는 책임은 **호출하는 쪽**에 있다.
+///   앱의 `ContentView`가 `#if DEBUG`로 분기한다.
 ///
 /// Figma `② Components` 페이지와 나란히 놓고 눈으로 비교한다.
 /// 특히 다음 두 가지를 확인한다.
@@ -225,4 +232,3 @@ public struct ComponentCatalogView: View {
     ComponentCatalogView()
         .environment(\.dynamicTypeSize, .accessibility2)
 }
-#endif
