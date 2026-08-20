@@ -26,7 +26,7 @@ Apple Developer Academy @ POSTECH · Challenge 5
 | 문서 | |
 |---|---|
 | [`docs/README.md`](docs/README.md) | 문서 인덱스 · 작업 흐름 |
-| [`docs/constitution.md`](docs/constitution.md) | 프로젝트 헌법 — **매번 확인** |
+| [`docs/rules.md`](docs/rules.md) | 프로젝트 규칙 — **매번 확인** |
 | [`docs/architecture.md`](docs/architecture.md) | 프레임워크 · 데이터 흐름 · 리스크 |
 | [`docs/design-source.md`](docs/design-source.md) | Figma ↔ 코드 매핑 |
 | [`docs/git-workflow.md`](docs/git-workflow.md) | 커밋 · PR 규칙 |

@@ -2,7 +2,7 @@ import Foundation
 
 /// 단계별로 사용자에게 보여줄 문구.
 ///
-/// 이 타입은 **앱의 모든 단계 관련 한글 문구의 유일한 출처**다 (헌법 II).
+/// 이 타입은 **앱의 모든 단계 관련 한글 문구의 유일한 출처**다 (규칙 「문구는 뷰 밖에」).
 /// 뷰에 문자열 리터럴이 등장하면 위반이다.
 ///
 /// 원문은 `땀_날씨앱_구간화_UI_멘트_개발가이드.md` §2·§5.
@@ -125,7 +125,7 @@ extension SweatStage {
 
     /// 화면에 표시할 구간 라벨. 예) "< 28℃", "33~35℃", "≥ 43℃"
     ///
-    /// `boundaries`에서 생성한다. 숫자를 문자열로 다시 적지 않는다 (헌법 V).
+    /// `boundaries`에서 생성한다. 숫자를 문자열로 다시 적지 않는다 (규칙 「경계값은 한 곳에」).
     public var rangeLabel: String {
         let lower = range.lowerBound
         let upper = range.upperBound

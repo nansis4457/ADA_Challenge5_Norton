@@ -38,7 +38,7 @@ struct SweatStageEngineTests {
 
     // MARK: - 보정값
 
-    @Test("보정값은 ±calibrationLimit 로 잘린다 (헌법 VI)")
+    @Test("보정값은 ±calibrationLimit 로 잘린다 (규칙 「기록이 예측을 고친다」)")
     func calibrationIsClamped() {
         let limit = SweatStageEngine.calibrationLimit
 

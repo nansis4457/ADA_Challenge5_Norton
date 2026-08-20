@@ -1,6 +1,6 @@
 # [001] 온보딩 — 태스크
 
-**계획** `docs/specs/001-onboarding/plan.md`
+**계획** `docs/specs/001-onboarding/spec.md`
 **브랜치** `001-onboarding`
 
 > 태스크 하나 = 커밋 하나. `[P]`는 병렬 가능.
@@ -48,7 +48,7 @@
 
 - [ ] T040 `SweatFeatures` 패키지 생성 + 링크, MainActor 기본
       `chore(features): SweatFeatures 패키지 추가`
-- [ ] T041 `lint-tokens.sh` 대상에 SweatFeatures 추가 (헌법 VIII)
+- [ ] T041 `lint-tokens.sh` 대상에 SweatFeatures 추가 (규칙 「색과 글꼴은 토큰으로」)
       `chore: 린트 대상에 SweatFeatures 추가`
 - [ ] T042 `OnboardingCopy` — 스펙 §6의 문구 전부
       `feat(onboarding): 온보딩 문구 정의 추가`
@@ -77,7 +77,7 @@
 - [ ] T091 흐름 수동 검증 — 최초/편집, 권한 허용·거부
       시뮬레이터 데이터 초기화: `xcrun simctl privacy <UDID> reset all <bundle-id>`
 - [ ] T092 린트·테스트·Debug/Release 빌드
-- [ ] T093 헌법 점검 표 최종 확인 (plan.md §2)
+- [ ] T093 규칙 점검 표 최종 확인 (spec.md §2)
 - [ ] T094 `docs/specs/README.md`의 001 상태 갱신
 - [ ] T095 PR 생성
 

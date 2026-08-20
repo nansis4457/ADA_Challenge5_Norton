@@ -2,7 +2,7 @@
 
 **버전** v1.1 · 2026-08-19
 **전제** Figma `Challenge5`의 12개 화면(`design-source.md`)과 `땀_날씨앱_구간화_UI_멘트_개발가이드.md`가 구현 기준.
-**헌법** `constitution.md` — 충돌 시 헌법이 우선한다.
+**규칙** `rules.md` — 충돌 시 규칙이 우선한다.
 
 ---
 
@@ -55,7 +55,7 @@ Portrait 고정 근거 — 홈의 마스코트·예보 그리드가 402pt 폭 �
 | UIKit / Storyboard | 신규 프로젝트에 섞을 이유 없음 |
 | HealthKit | 권한 심사 비용 대비 이번 스코프 이득 없음. 3차 재검토 |
 | CoreMotion | 이동수단 자동 판별 → 온보딩 직접 선택으로 대체 |
-| **Foundation Models** | 이 앱의 문구는 설계표로 확정된 결정적 텍스트다. 생성형으로 바꾸면 QA 대상이 폭증하고 폭염 안전 문구의 일관성이 깨진다 (헌법 III) |
+| **Foundation Models** | 이 앱의 문구는 설계표로 확정된 결정적 텍스트다. 생성형으로 바꾸면 QA 대상이 폭증하고 폭염 안전 문구의 일관성이 깨진다 (규칙 「단정하지 않는다」) |
 
 ---
 
@@ -82,8 +82,8 @@ Portrait 고정 근거 — 홈의 마스코트·예보 그리드가 402pt 폭 �
 ```
 
 **규칙**
-- Domain은 `Foundation`만 import (헌법 I)
-- Repository는 `actor`. 캐시와 재시도가 그 안에 갇힌다 (헌법 X)
+- Domain은 `Foundation`만 import (규칙 「도메인은 순수하게」)
+- Repository는 `actor`. 캐시와 재시도가 그 안에 갇힌다 (규칙 「Swift 6」)
 - View는 Repository를 직접 부르지 않는다. 항상 Store 경유
 
 ### 4.2 모듈 (로컬 SPM 패키지)
@@ -106,7 +106,7 @@ ADA_Challenge5_Norton/
 
 ## 5. 땀 등급 엔진
 
-### 5.1 구간 — 잠정값 (헌법 V)
+### 5.1 구간 — 잠정값 (규칙 「경계값은 한 곳에」)
 
 | 단계 | 체감온도 | 상태 |
 |---|---|---|
@@ -147,7 +147,7 @@ public enum Sensitivity: String, CaseIterable, Codable, Sendable {
 
 ### 5.3 습도·풍속
 
-**단계를 바꾸지 않는다** (헌법 IV). 설명 문구와 추천 강도만 보정한다.
+**단계를 바꾸지 않는다** (규칙 「습도·풍속은 등급을 바꾸지 않는다」). 설명 문구와 추천 강도만 보정한다.
 체감온도 산식에 습도가 이미 반영되어 있어 이중 계산이 되기 때문이다.
 
 ### 5.4 체감온도 산출
@@ -221,7 +221,7 @@ WeatherKit의 `apparentTemperature`는 계산식이 다르므로 **혼용하지 
 - 건물 높이는 공공데이터(건축물대장·국가공간정보) 또는 OSM `building:levels`
 - 그늘 판정: 건물 그림자 폴리곤이 세그먼트를 덮는지
 
-### 7.3 정확도 — 헌법 VII
+### 7.3 정확도 — 규칙 「추정치는 추정치로」
 
 가로수·캐노피·육교 하부는 반영되지 않는 **근사치다.**
 
@@ -329,11 +329,11 @@ struct UserProfile: Codable, Sendable {
 func updateCalibration(logs: [SweatLog], profile: UserProfile) {
     let alpha = 0.25
     let highHumidity = logs.filter { $0.humidity >= 70 }
-    guard highHumidity.count >= 5 else { return }          // 헌법 VI
+    guard highHumidity.count >= 5 else { return }          // 규칙 「기록이 예측을 고친다」
     let error = highHumidity.map { Double($0.actualScore - $0.predictedStage) }
     let mean = error.reduce(0, +) / Double(error.count)
     let next = (1 - alpha) * profile.humidityBoost + alpha * mean
-    profile.humidityBoost = min(max(next, -1.5), 1.5)      // 헌법 VI
+    profile.humidityBoost = min(max(next, -1.5), 1.5)      // 규칙 「기록이 예측을 고친다」
 }
 ```
 
@@ -343,13 +343,13 @@ func updateCalibration(logs: [SweatLog], profile: UserProfile) {
 
 ## 11. 디자인 시스템
 
-매핑 규칙은 `design-source.md`. 강제 사항은 헌법 VIII.
+매핑 규칙은 `design-source.md`. 강제 사항은 규칙 「색과 글꼴은 토큰으로」.
 
 **마스코트** — 6단계 캐릭터는 이미지로 굽지 말고 **SwiftUI `Shape`/`Path`로 구현**한다. 단계 전환 시 색·표정·땀방울 개수가 보간되어야 자연스럽다.
 
 ---
 
-## 12. 접근성 (헌법 IX)
+## 12. 접근성 (규칙 「접근성은 마감이 아니다」)
 
 - **Dynamic Type** — 예보 그리드가 가장 취약. 접근성 크기에서 시간별 예보를 세로 리스트로 전환
 - **색상 단독 전달 금지** — 실내(시안)/실외(핑크) 구간 바에 라벨 병기. 색각 이상 사용자에게 66%/34%가 구분되지 않는다
@@ -393,7 +393,7 @@ func updateCalibration(logs: [SweatLog], profile: UserProfile) {
 | 격자 변환 | 알려진 좌표쌍 고정 |
 | 보정 엔진 | 합성 로그로 수렴·클램프 검증 |
 | 날씨 리포지토리 | JSON 픽스처 + 장애 주입(타임아웃·빈 응답·미지 카테고리) |
-| 카피 | 헌법 III 금지 패턴 정규식 린트 |
+| 카피 | 규칙 「단정하지 않는다」 금지 패턴 정규식 린트 |
 | UI | 주요 5개 화면 스냅샷 (Dynamic Type 3단계) |
 
 ---

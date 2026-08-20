@@ -38,7 +38,7 @@ main                          항상 빌드 가능. 직접 푸시 금지.
 | `NNN-<slug>` | 스펙 구현 (`docs/specs/NNN-*`와 동일 이름) | `002-home` |
 | `fix/` | 버그 수정 | `fix/grid-conversion-seoul` |
 | `chore/` | 빌드 설정·의존성·문서 | `chore/swift6-migration` |
-| `docs/` | 문서만 변경 | `docs/update-constitution` |
+| `docs/` | 문서만 변경 | `docs/update-rules` |
 
 작업 브랜치는 머지 후 삭제한다.
 
@@ -120,7 +120,7 @@ Refs: docs/specs/002-home
 
 docs/specs/002-home/spec.md
 
-## 헌법 점검
+## 규칙 점검
 
 - [ ] I. 도메인 순수성 — SweatDomain 의존성 추가 없음
 - [ ] II. 로직/문구 분리 — 뷰에 문자열 리터럴 없음
@@ -148,7 +148,7 @@ docs/specs/002-home/spec.md
 
 - **Squash and merge**를 기본으로 한다. `main` 히스토리는 스펙 단위로 읽힌다.
 - squash 커밋 메시지는 PR 제목이 아니라 §2 형식으로 다시 쓴다.
-- 머지 전 조건: 빌드 성공, 테스트 통과, 헌법 점검 항목 전부 응답됨
+- 머지 전 조건: 빌드 성공, 테스트 통과, 규칙 점검 항목 전부 응답됨
 
 ---
 
@@ -171,7 +171,7 @@ docs/specs/002-home/spec.md
 ## 5. 커밋 전 체크리스트
 
 ```bash
-# 디자인 토큰 검사 (헌법 VIII)
+# 디자인 토큰 검사 (규칙 「색과 글꼴은 토큰으로」)
 ./Scripts/lint-tokens.sh
 ```
 

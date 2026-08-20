@@ -42,7 +42,7 @@ public struct SelectableCard: View {
             .padding(Space.x4)
         }
         .buttonStyle(SelectableSurfaceStyle(isSelected: isSelected, cornerRadius: Radius.lg))
-        // 제목과 설명을 따로 읽으면 맥락이 끊긴다. 하나의 선택지로 묶는다 (헌법 IX).
+        // 제목과 설명을 따로 읽으면 맥락이 끊긴다. 하나의 선택지로 묶는다 (규칙 「접근성은 마감이 아니다」).
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
