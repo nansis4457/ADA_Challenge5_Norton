@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA0300000000000000000003 /* WeatherData in Frameworks */ = {isa = PBXBuildFile; productRef = AA0300000000000000000002 /* WeatherData */; };
 		AA0100000000000000000005 /* SweatDomain in Frameworks */ = {isa = PBXBuildFile; productRef = AA0100000000000000000003 /* SweatDomain */; };
 		AA0100000000000000000006 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AA0100000000000000000004 /* DesignSystem */; };
 		AA0200000000000000000005 /* SweatPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = AA0200000000000000000003 /* SweatPersistence */; };
@@ -32,6 +33,7 @@
 			files = (
 				AA0100000000000000000006 /* DesignSystem in Frameworks */,
 				AA0200000000000000000006 /* SweatFeatures in Frameworks */,
+				AA0300000000000000000003 /* WeatherData in Frameworks */,
 				AA0200000000000000000005 /* SweatPersistence in Frameworks */,
 				AA0100000000000000000005 /* SweatDomain in Frameworks */,
 			);
@@ -78,6 +80,7 @@
 			packageProductDependencies = (
 				AA0100000000000000000004 /* DesignSystem */,
 				AA0200000000000000000004 /* SweatFeatures */,
+				AA0300000000000000000002 /* WeatherData */,
 				AA0200000000000000000003 /* SweatPersistence */,
 				AA0100000000000000000003 /* SweatDomain */,
 			);
@@ -112,6 +115,7 @@
 			packageReferences = (
 				AA0100000000000000000002 /* XCLocalSwiftPackageReference "Packages/DesignSystem" */,
 				AA0200000000000000000002 /* XCLocalSwiftPackageReference "Packages/SweatFeatures" */,
+				AA0300000000000000000001 /* XCLocalSwiftPackageReference "Packages/WeatherData" */,
 				AA0200000000000000000001 /* XCLocalSwiftPackageReference "Packages/SweatPersistence" */,
 				AA0100000000000000000001 /* XCLocalSwiftPackageReference "Packages/SweatDomain" */,
 			);
@@ -375,6 +379,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/SweatFeatures;
 		};
+		AA0300000000000000000001 /* XCLocalSwiftPackageReference "Packages/WeatherData" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/WeatherData;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -393,6 +401,10 @@
 		AA0200000000000000000004 /* SweatFeatures */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SweatFeatures;
+		};
+		AA0300000000000000000002 /* WeatherData */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WeatherData;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

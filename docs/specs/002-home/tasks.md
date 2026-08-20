@@ -34,17 +34,17 @@
 
 ## 날씨 데이터 — 소스는 WeatherKit 하나
 
-- [ ] T020 `WeatherData` 패키지 생성 + 링크
+- [x] T020 `WeatherData` 패키지 생성 + 링크
       `chore(weather): WeatherData 패키지 추가`
-- [ ] T021 `WeatherKitSource` — 기온·습도·풍속을 `WeatherObservation`으로
+- [x] T021 `WeatherKitSource` — 기온·습도·풍속을 `WeatherObservation`으로
       습도 단위(0~1 ↔ %) 변환에 주의한다
       `feat(weather): WeatherKit 소스 어댑터 추가`
-- [ ] T022 캐시 — 메모리 10분 · 디스크 1시간(stale 허용)
+- [x] T022 캐시 — 메모리 10분 · 디스크 1시간(stale 허용)
       **폴백 소스가 없으므로 캐시가 유일한 방어선이다**
       `feat(weather): 관측값 캐시 추가`
-- [ ] T023 `WeatherRepository` — 조회·캐시·재시도, 값에 출처 부착
+- [x] T023 `WeatherRepository` — 조회·캐시·재시도, 값에 출처 부착
       `feat(weather): 날씨 저장소 추가`
-- [ ] T024 저장소 테스트 — 타임아웃·오류·오프라인·stale 반환 **(R10, R11)**
+- [x] T024 저장소 테스트 — 타임아웃·오류·오프라인·stale 반환 **(R10, R11)**
       `test(weather): 실패 경로와 캐시 검증`
 
 ## 위치
@@ -124,6 +124,7 @@ T000 (산식 검증) ── 이게 안 되면 전부 멈춘다
 
 | 날짜 | 완료 | 비고 |
 |---|---|---|
+| 2026-08-20 | T020~T024 | WeatherData 패키지. 소스를 프로토콜로 분리해 네트워크 없이 실패 경로 검증. 캐시 격자 키의 경계 한계를 테스트로 명시 |
 | 2026-08-20 | T001·T002 | capability 활성화. 출처 표기는 SDK에서 `WeatherAttribution` 정의를 직접 확인 |
 | 2026-08-20 | T012~T014 | 관측값 모델·예보 구간·규칙 회귀. **`Observation` 이름이 Apple 모듈을 가려 `@Observable`이 깨짐 → `WeatherObservation`으로 개명** |
 | 2026-08-20 | T010·T011 | 산식 구현 + 기준 케이스 6개 고정. **처음 쓴 기대값 3개가 지어낸 값이라 실패 → 계산한 값으로 교체** |
