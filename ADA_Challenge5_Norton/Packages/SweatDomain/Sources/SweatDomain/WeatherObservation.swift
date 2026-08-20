@@ -10,9 +10,15 @@ public enum WeatherSource: String, Sendable, Codable, CaseIterable {
 
 /// 한 시점의 날씨.
 ///
+/// - Important: 이름을 `Observation`으로 두면 **Apple의 `Observation` 모듈을 가린다.**
+///   `@Observable` 매크로가 확장될 때 `Observation.Observable`을 참조하는데,
+///   같은 이름의 타입이 있으면 모듈 대신 그 타입으로 해석되어
+///   다른 패키지의 `@Observable`이 컴파일되지 않는다.
+///   패키지 단위 빌드에서는 드러나지 않고 앱을 링크할 때 터진다.
+///
 /// 체감온도는 저장하지 않고 **계산한다.** 소스가 주는 체감온도는 산식이 달라
 /// 쓰지 않는다 — 그러면 단계 기준이 둘이 된다.
-public struct Observation: Sendable, Codable, Equatable {
+public struct WeatherObservation: Sendable, Codable, Equatable {
 
     /// 기온 (℃)
     public let temperature: Double

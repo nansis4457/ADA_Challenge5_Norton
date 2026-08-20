@@ -224,10 +224,10 @@ Packages/
 ├── SweatDomain/Sources/SweatDomain/
 │   ├── ApparentTemperature.swift    산식 (순수 함수)
 │   ├── ForecastLevel.swift          6단계 → 표시용 4구간
-│   └── Observation.swift            기온·습도·풍속·체감·시각·출처
+│   └── WeatherObservation.swift            기온·습도·풍속·체감·시각·출처
 ├── WeatherData/                     신설
 │   ├── WeatherRepository.swift      actor. 조회·캐시·재시도
-│   ├── WeatherKitSource.swift       기온·습도·풍속을 Observation 으로
+│   ├── WeatherKitSource.swift       기온·습도·풍속을 WeatherObservation 으로
 │   └── Cache/                       메모리 10분 · 디스크 1시간(stale 허용)
 └── SweatFeatures/Sources/SweatFeatures/
     └── Home/
@@ -242,7 +242,7 @@ Packages/
 ## 14. 데이터 흐름
 
 ```
-위치  ─→ WeatherRepository ─→ Observation(출처 포함)
+위치  ─→ WeatherRepository ─→ WeatherObservation(출처 포함)
                                    │
                      ┌─────────────┴─────────────┐
               체감온도(있으면 그대로,      기온·습도

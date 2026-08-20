@@ -35,9 +35,9 @@ struct HumidityWindRuleTests {
     @Test("풍속은 어디에도 들어가지 않는다")
     func windIsAbsentEverywhere() {
         // 산식에도 없고 엔진에도 없다. 관측값에 담기지만 계산에는 쓰이지 않는다.
-        let calm = Observation(temperature: 33, relativeHumidity: 70, windSpeed: 0,
+        let calm = WeatherObservation(temperature: 33, relativeHumidity: 70, windSpeed: 0,
                                observedAt: Date(), source: .appleWeather)
-        let windy = Observation(temperature: 33, relativeHumidity: 70, windSpeed: 15,
+        let windy = WeatherObservation(temperature: 33, relativeHumidity: 70, windSpeed: 15,
                                 observedAt: Date(), source: .appleWeather)
         #expect(calm.apparentTemperature == windy.apparentTemperature)
         #expect(SweatStage.containing(calm.apparentTemperature)
@@ -65,7 +65,7 @@ struct HumidityWindRuleTests {
     func noDoubleCounting() {
         // 체감온도를 직접 넣었을 때와, 같은 값을 관측값에서 계산해 넣었을 때가 같아야 한다.
         // 중간에 습도 보정이 한 번 더 들어가면 두 값이 어긋난다.
-        let observation = Observation(temperature: 31.5, relativeHumidity: 78, windSpeed: 1.1,
+        let observation = WeatherObservation(temperature: 31.5, relativeHumidity: 78, windSpeed: 1.1,
                                       observedAt: Date(), source: .appleWeather)
         let fromObservation = SweatStageEngine.stage(
             apparentTemperature: observation.apparentTemperature, sensitivity: .normal)

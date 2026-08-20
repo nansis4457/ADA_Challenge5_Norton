@@ -2,12 +2,12 @@ import Foundation
 import Testing
 @testable import SweatDomain
 
-@Suite("Observation · ForecastLevel")
+@Suite("WeatherObservation · ForecastLevel")
 struct ObservationTests {
 
     private func make(temp: Double, humidity: Double, wind: Double = 1.1,
-                      minutesAgo: Double = 0) -> Observation {
-        Observation(
+                      minutesAgo: Double = 0) -> WeatherObservation {
+        WeatherObservation(
             temperature: temp,
             relativeHumidity: humidity,
             windSpeed: wind,
@@ -46,7 +46,7 @@ struct ObservationTests {
     func codableRoundTrip() throws {
         let original = make(temp: 31.5, humidity: 78)
         let data = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(Observation.self, from: data)
+        let decoded = try JSONDecoder().decode(WeatherObservation.self, from: data)
         #expect(decoded == original)
     }
 

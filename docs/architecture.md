@@ -36,7 +36,7 @@ Portrait 고정 근거 — 홈의 마스코트·예보 그리드가 402pt 폭 �
 | 영역 | 프레임워크 | 용도 | 선택 이유 |
 |---|---|---|---|
 | UI | **SwiftUI** | 전 화면 | 디자인이 선언적 스택 레이아웃과 1:1 대응 |
-| 상태 | **Observation** (`@Observable`) | Store | 뷰 무효화 범위가 좁아 예보 그리드 리렌더 비용이 낮음 |
+| 상태 | **WeatherObservation** (`@Observable`) | Store | 뷰 무효화 범위가 좁아 예보 그리드 리렌더 비용이 낮음 |
 | 영속화 | **SwiftData** | 기록·프로필 | 스키마가 단순, CloudKit 동기화를 설정만으로 확장 |
 | 위치 | **CoreLocation** | 현재 지점, 이동 추적 | `CLLocationUpdate.liveUpdates()` + `CLBackgroundActivitySession` |
 | 지도·경로 | **MapKit** | 지도, 도보 경로 | `MKDirections`(walking), SwiftUI `Map`/`MapPolyline` |

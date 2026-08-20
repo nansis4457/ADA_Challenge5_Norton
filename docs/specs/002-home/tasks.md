@@ -25,18 +25,18 @@
       `feat(domain): 체감온도 산식 추가`
 - [x] T011 산식 테스트 — **공표 사례 대조**. 스펙의 전제를 고정한다
       `test(domain): 체감온도 산식을 공표 사례로 검증`
-- [ ] T012 [P] `Observation` — 관측값 + 출처
+- [x] T012 [P] `WeatherObservation` — 관측값 + 출처
       `feat(domain): 관측값 모델 추가`
-- [ ] T013 [P] `ForecastLevel` — 6단계 → 표시용 4구간
+- [x] T013 [P] `ForecastLevel` — 6단계 → 표시용 4구간
       `feat(domain): 예보 표시 단계 매핑 추가`
-- [ ] T014 규칙 회귀 테스트 — 습도만 바꿔도 단계 불변 (R8)
+- [x] T014 규칙 회귀 테스트 — 습도만 바꿔도 단계 불변 (R8)
       `test(domain): 습도·풍속이 단계를 바꾸지 않음을 검증`
 
 ## 날씨 데이터 — 소스는 WeatherKit 하나
 
 - [ ] T020 `WeatherData` 패키지 생성 + 링크
       `chore(weather): WeatherData 패키지 추가`
-- [ ] T021 `WeatherKitSource` — 기온·습도·풍속을 `Observation`으로
+- [ ] T021 `WeatherKitSource` — 기온·습도·풍속을 `WeatherObservation`으로
       습도 단위(0~1 ↔ %) 변환에 주의한다
       `feat(weather): WeatherKit 소스 어댑터 추가`
 - [ ] T022 캐시 — 메모리 10분 · 디스크 1시간(stale 허용)
@@ -121,5 +121,6 @@ T000 (산식 검증) ── 이게 안 되면 전부 멈춘다
 
 | 날짜 | 완료 | 비고 |
 |---|---|---|
+| 2026-08-20 | T012~T014 | 관측값 모델·예보 구간·규칙 회귀. **`Observation` 이름이 Apple 모듈을 가려 `@Observable`이 깨짐 → `WeatherObservation`으로 개명** |
 | 2026-08-20 | T010·T011 | 산식 구현 + 기준 케이스 6개 고정. **처음 쓴 기대값 3개가 지어낸 값이라 실패 → 계산한 값으로 교체** |
 | 2026-08-20 | T000 | 산식 검증. 계수 일치, 디자인 수치 0.73℃ 오차, 단계는 불변. **풍속은 산식에 안 들어감** 발견 |
