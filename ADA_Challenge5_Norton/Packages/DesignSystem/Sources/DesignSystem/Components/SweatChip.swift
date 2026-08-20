@@ -37,9 +37,18 @@ public struct SweatChip: View {
         tracking: SweatTextStyle.chip15.tracking
     )
 
-    /// - Note: Figma 컴포넌트의 상하 여백은 9이며 `space/*` 토큰에 없다 (`space/2`가 8).
-    ///   `SweatButton.horizontalPadding`과 같은 성격의 토큰 갭이다.
+    /// Figma 컴포넌트의 상하 여백. `space/*` 토큰에 없는 값이다 (`space/2`가 8).
+    ///
+    /// **토큰으로 낮추지 않는다.** 8로 내리면 칩이 더 얇아져 터치 영역이 나빠진다.
+    /// 다른 컴포넌트의 여백은 토큰으로 정렬했지만 칩만 예외다.
     private static let verticalPadding: CGFloat = 9
+
+    /// Apple HIG 최소 터치 타깃.
+    ///
+    /// 칩의 시각 높이는 약 37pt로 이 값에 미치지 못한다. 여백을 키워 높이를
+    /// 맞추면 칩이 눈에 띄게 두꺼워지므로, **보이는 크기는 그대로 두고
+    /// 탭 영역만** 넓힌다. 대가로 칩이 놓인 행의 높이가 7pt 늘어난다.
+    static let minimumTouchTarget: CGFloat = 44
 }
 
 private struct SweatChipStyle: ButtonStyle {
@@ -57,7 +66,10 @@ private struct SweatChipStyle: ButtonStyle {
                     lineWidth: 1
                 )
             }
-            .contentShape(shape)
+            // 시각 크기를 유지한 채 탭 영역만 44pt로 넓힌다 (규칙 「접근성은 마감이 아니다」).
+            // 배경과 테두리를 먼저 그린 뒤에 프레임을 늘려야 칩 자체는 커지지 않는다.
+            .frame(minHeight: SweatChip.minimumTouchTarget)
+            .contentShape(.rect)
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
