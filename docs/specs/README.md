@@ -9,7 +9,7 @@
 | 001 | [온보딩](001-onboarding/spec.md) | 01–03 | Draft | `001-onboarding` |
 
 > **줄높이 처리 방식은 결정됐다** — SwiftUI 기본 조판을 따른다 (`docs/design-source.md`).
-> 남은 둘(토큰 밖 여백 · Chip 터치 타깃)은 001의 `plan.md`를 쓰기 전에 정한다.
+> 남은 둘(토큰 밖 여백 · Chip 터치 타깃)은 001의 `spec.md`의 구현 계획를 쓰기 전에 정한다.
 | 002 | 홈 · 땀 등급 + 등급 상세 | 04, 05 | 미작성 | |
 | 003 | 지도 · 경로 · 실내외 비율 | 06–08 | 미작성 | |
 | 004 | 이동 중 (Live Activity) | 09 | 미작성 | |
@@ -18,7 +18,7 @@
 ## 왜 이 순서인가
 
 **000이 먼저인 이유** — 001~005 전부가 디자인 토큰과 등급 엔진에 의존한다.
-토큰 없이 화면을 만들면 헌법 VIII 위반이 구조적으로 발생한다.
+토큰 없이 화면을 만들면 규칙 「색과 글꼴은 토큰으로」 위반이 구조적으로 발생한다.
 
 **002가 001보다 먼저 끝나도 된다** — 온보딩은 값을 입력받을 뿐이고,
 그 값의 소비처는 홈이다. 홈을 기본값으로 먼저 만들고 온보딩을 붙이는 편이 검증이 빠르다.
@@ -28,10 +28,9 @@
 ## 스펙 작성 순서
 
 ```
-docs/templates/spec-template.md  → docs/specs/NNN-<slug>/spec.md   (무엇을·왜)
-docs/templates/plan-template.md  → docs/specs/NNN-<slug>/plan.md   (어떻게)
+docs/templates/spec-template.md  → docs/specs/NNN-<slug>/spec.md   (무엇을·왜 + 어떻게)
 docs/templates/tasks-template.md → docs/specs/NNN-<slug>/tasks.md  (커밋 단위)
 ```
 
-spec이 승인되기 전에 plan을 쓰지 않는다.
-plan의 헌법 점검 표가 비어 있으면 tasks를 쓰지 않는다.
+스펙 앞부분(무엇을·왜)이 정해지기 전에 구현 계획을 쓰지 않는다.
+규칙 점검 표가 비어 있으면 tasks를 쓰지 않는다.

@@ -57,10 +57,10 @@ enum PackageLayout {
     }
 }
 
-@Suite("도메인 순수성 — 헌법 I · V", .enabled(if: PackageLayout.isAvailable))
+@Suite("도메인 순수성 — 규칙 「도메인은 순수하게」 · V", .enabled(if: PackageLayout.isAvailable))
 struct DomainPurityTests {
 
-    /// R2 · 헌법 I — 도메인은 Foundation 외에 아무것도 의존하지 않는다.
+    /// R2 · 규칙 「도메인은 순수하게」 — 도메인은 Foundation 외에 아무것도 의존하지 않는다.
     @Test("매니페스트에 외부 의존성이 없다")
     func manifestHasNoDependencies() throws {
         let manifest = try String(contentsOf: PackageLayout.manifest, encoding: .utf8)
@@ -69,12 +69,12 @@ struct DomainPurityTests {
             !code.contains(".package("),
             """
             SweatDomain에 외부 의존성이 추가되었습니다.
-            헌법 I(도메인 순수성)을 먼저 개정하지 않으면 추가할 수 없습니다.
+            규칙 「도메인은 순수하게」을 먼저 개정하지 않으면 추가할 수 없습니다.
             """
         )
     }
 
-    /// 헌법 I — 소스에서 Foundation 외 import 금지.
+    /// 규칙 「도메인은 순수하게」 — 소스에서 Foundation 외 import 금지.
     @Test("Foundation 외의 import가 없다")
     func onlyImportsFoundation() throws {
         let allowed: Set<String> = ["Foundation"]
@@ -85,13 +85,13 @@ struct DomainPurityTests {
                 let module = line.dropFirst("import ".count).trimmingCharacters(in: .whitespaces)
                 #expect(
                     allowed.contains(module),
-                    "\(file.lastPathComponent)가 \(module)을 import합니다 (헌법 I 위반)"
+                    "\(file.lastPathComponent)가 \(module)을 import합니다 (규칙 「도메인은 순수하게」 위반)"
                 )
             }
         }
     }
 
-    /// R5 · 헌법 V — 구간 경계값은 `SweatStage.boundaries` 한 곳에만 존재한다.
+    /// R5 · 규칙 「경계값은 한 곳에」 — 구간 경계값은 `SweatStage.boundaries` 한 곳에만 존재한다.
     ///
     /// 정규식으로 숫자 "모양"을 찾지 않고, 숫자 리터럴을 뽑아 **값으로** 비교한다.
     /// `33`과 `33.0`은 같은 경계값이고 `33.5`는 아니다. 문자열 매칭으로는
@@ -117,7 +117,7 @@ struct DomainPurityTests {
                 offenders.isEmpty,
                 """
                 \(file.lastPathComponent)에 구간 경계값 \(Set(offenders).sorted())이 등장합니다.
-                경계는 \(singleSource)의 boundaries 배열에만 있어야 합니다 (헌법 V).
+                경계는 \(singleSource)의 boundaries 배열에만 있어야 합니다 (규칙 「경계값은 한 곳에」).
                 """
             )
         }

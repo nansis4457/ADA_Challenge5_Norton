@@ -25,7 +25,7 @@ public struct SweatChip: View {
                 .padding(.horizontal, Space.x4)
         }
         .buttonStyle(SweatChipStyle(isOn: isOn))
-        // 선택 상태를 색과 굵기로만 전달하면 VoiceOver 사용자에게 닿지 않는다 (헌법 IX).
+        // 선택 상태를 색과 굵기로만 전달하면 VoiceOver 사용자에게 닿지 않는다 (규칙 「접근성은 마감이 아니다」).
         .accessibilityAddTraits(isOn ? [.isSelected] : [])
     }
 

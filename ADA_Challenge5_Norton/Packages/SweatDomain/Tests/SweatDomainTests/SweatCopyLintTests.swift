@@ -20,7 +20,7 @@ struct SweatCopyLintTests {
         return result
     }
 
-    // MARK: - 헌법 III · 금지 표현
+    // MARK: - 규칙 「단정하지 않는다」 · 금지 표현
 
     /// 이 앱은 땀의 **양**을 예측하지 않는다.
     /// 분비량 수치·배수 표현·단정형 등식은 근거 없는 과장이다.
@@ -49,7 +49,7 @@ struct SweatCopyLintTests {
                     hits == 0,
                     """
                     \(stage) \(label)에 금지 표현(\(reason))이 있습니다: "\(text)"
-                    헌법 III — 이 앱은 땀의 양을 예측하지 않습니다.
+                    규칙 「단정하지 않는다」 — 이 앱은 땀의 양을 예측하지 않습니다.
                     """
                 )
             }
@@ -100,7 +100,7 @@ struct SweatCopyLintTests {
 
     // MARK: - 구간 라벨
 
-    /// 라벨은 `boundaries`에서 생성된다. 숫자를 손으로 다시 적으면 헌법 V 위반이다.
+    /// 라벨은 `boundaries`에서 생성된다. 숫자를 손으로 다시 적으면 규칙 「경계값은 한 곳에」 위반이다.
     @Test("구간 라벨이 경계값과 일치한다")
     func rangeLabelMatchesBoundaries() {
         #expect(SweatStage.one.rangeLabel == "< 28℃")

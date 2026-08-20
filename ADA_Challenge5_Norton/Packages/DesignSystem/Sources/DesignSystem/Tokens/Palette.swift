@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Figma `Sweat App` 변수 컬렉션의 코드 미러 (헌법 VIII).
+// Figma `Sweat App` 변수 컬렉션의 코드 미러 (규칙 「색과 글꼴은 토큰으로」).
 // 값을 고칠 때는 Figma를 먼저 고치고 README.md의 매핑 표를 함께 갱신한다.
 
 /// 무채색 잉크. 숫자가 클수록 진하다.

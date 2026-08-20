@@ -5,7 +5,7 @@ import Foundation
 /// 같은 날씨라도 사람마다 느끼는 정도가 다르다. 이 값은 체감온도에
 /// 오프셋을 더해 단계 산출을 개인화한다.
 ///
-/// 한글 라벨("적은 편" 등)은 여기에 없다. `SweatCopy` 담당이다 (헌법 II).
+/// 한글 라벨("적은 편" 등)은 여기에 없다. `SweatCopy` 담당이다 (규칙 「문구는 뷰 밖에」).
 /// `rawValue`는 영속화용 식별자이며 사용자에게 보이지 않는다.
 public enum Sensitivity: String, CaseIterable, Sendable, Codable {
     /// 더워도 땀은 잘 안 나는 편

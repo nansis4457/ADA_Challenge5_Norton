@@ -35,7 +35,7 @@ public struct SweatTextField: View {
                     Surface.card,
                     in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
                 )
-                // 라벨이 시각적으로만 붙어 있으면 VoiceOver는 값만 읽는다 (헌법 IX).
+                // 라벨이 시각적으로만 붙어 있으면 VoiceOver는 값만 읽는다 (규칙 「접근성은 마감이 아니다」).
                 .accessibilityLabel(label)
         }
     }

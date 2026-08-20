@@ -21,7 +21,7 @@ Text("오늘은 땀이 많이 날 수 있어요")
     .background(Surface.card, in: .rect(cornerRadius: Radius.lg))
 ```
 
-뷰 코드에 색상·폰트 리터럴을 쓰지 않는다 (헌법 VIII).
+뷰 코드에 색상·폰트 리터럴을 쓰지 않는다 (규칙 「색과 글꼴은 토큰으로」).
 `Color(hex:)`는 이 패키지의 토큰 정의에서만 호출한다.
 
 ---

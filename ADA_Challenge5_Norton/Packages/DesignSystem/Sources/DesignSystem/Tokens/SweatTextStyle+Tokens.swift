@@ -37,7 +37,7 @@ public struct SweatTextStyle: Sendable, Equatable {
 /// 폰트·자간·줄간격을 함께 적용하고 Dynamic Type에 맞춰 확대한다.
 ///
 /// `Font.system(size:)`는 고정 크기라 **Dynamic Type을 따르지 않는다.**
-/// 접근성 설정을 키워도 글자가 그대로면 헌법 IX 위반이므로,
+/// 접근성 설정을 키워도 글자가 그대로면 규칙 「접근성은 마감이 아니다」 위반이므로,
 /// `@ScaledMetric`으로 배율을 얻어 크기·자간·줄간격에 함께 곱한다.
 /// 자간과 줄간격도 같이 곱해야 글자만 커지고 간격은 그대로인 어색한 상태를 피한다.
 private struct SweatTypeModifier: ViewModifier {
@@ -63,7 +63,7 @@ extension View {
     }
 }
 
-// Figma `Sweat App` 텍스트 스타일의 코드 미러 (헌법 VIII).
+// Figma `Sweat App` 텍스트 스타일의 코드 미러 (규칙 「색과 글꼴은 토큰으로」).
 //
 // 정적 멤버를 SweatTextStyle 위에 두어야 `.sweatType(.hero31)` 단축 문법이 동작한다.
 // 별도 네임스페이스(SweatType)에 두면 타입이 달라 점 문법을 쓸 수 없다.

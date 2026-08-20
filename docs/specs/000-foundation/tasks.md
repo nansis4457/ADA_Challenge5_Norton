@@ -1,6 +1,6 @@
 # [000] 파운데이션 — 태스크
 
-**계획** `docs/specs/000-foundation/plan.md`
+**계획** `docs/specs/000-foundation/spec.md`
 **브랜치** `000-foundation`
 
 > 태스크 하나 = 커밋 하나. `[P]`는 병렬 가능(서로 다른 파일, 의존 없음).
@@ -19,7 +19,7 @@
 - [x] T010 `SWIFT_VERSION` 5.0 → 6.0, 빌드 경고 0 확인 **(R1)**
       `chore: Swift 6 언어 모드로 전환`
 - [x] T011 기본 액터 격리 방침 적용 — 앱·DesignSystem은 MainActor, SweatDomain은 nonisolated
-      계획 §5의 확인 사항을 툴체인으로 검증하고, 결과를 plan.md에 반영한다
+      계획 §5의 확인 사항을 툴체인으로 검증하고, 결과를 스펙의 구현 계획에 반영한다
       `chore: 타깃별 기본 액터 격리 설정`
 
 ## 패키지 골격
@@ -57,7 +57,7 @@
 - [x] T043 `DesignSystem/README.md` 매핑 표 (Figma 변수명 · hex · Swift 심볼)
       `docs(design-system): 토큰 매핑 표 추가`
 
-## 컴포넌트 5종 — 각각 접근성 포함 (R8, IX)
+## 컴포넌트 5종 — 각각 접근성 포함 (R8, 「접근성은 마감이 아니다」)
 
 - [x] T050 `SweatButton` (Primary / Dark / Ghost)
       `design(design-system): Button 컴포넌트 추가`
@@ -74,13 +74,13 @@
 
 ## 린트
 
-- [x] T060 `Scripts/lint-tokens.sh` — 색상·폰트 리터럴 검출 (헌법 VIII)
+- [x] T060 `Scripts/lint-tokens.sh` — 색상·폰트 리터럴 검출 (규칙 「색과 글꼴은 토큰으로」)
       대상 경로는 Features가 생기는 001부터 확장한다
       `chore: 디자인 토큰 리터럴 검출 스크립트 추가`
 
 ## 마무리
 
-- [x] T090 헌법 점검 표 최종 확인 (plan.md §2)
+- [x] T090 규칙 점검 표 최종 확인 (spec.md §2)
 - [x] T091 빌드 경고 0 · 테스트 전체 통과
 - [x] T092 `docs/specs/README.md`의 000 상태를 Implemented로 갱신
 - [ ] T093 PR 생성 — `docs/git-workflow.md` §3 템플릿
@@ -112,7 +112,7 @@ T010(Swift 6 전환)이 **가장 먼저**다. 패키지를 만든 뒤에 전환�
 | 2026-08-19 | T020 | `swift test` 통과 (macOS 호스트, 시뮬레이터 불필요) |
 | 2026-08-19 | T021 | 앱 타깃에 두 패키지 링크, 클린 빌드 경고 0 |
 | 2026-08-19 | T030 | `SweatStage` 정의. 경계값은 `boundaries` 배열 한 곳. 임시 테스트로 동작 확인 후 원복 |
-| 2026-08-19 | T031 | `Sensitivity` + `SweatStageEngine`. 헌법 IV를 시그니처로 강제. **보정값 단위 불일치 발견 → spec 미해결 질문 추가** |
+| 2026-08-19 | T031 | `Sensitivity` + `SweatStageEngine`. 규칙 「습도·풍속은 등급을 바꾸지 않는다」를 시그니처로 강제. **보정값 단위 불일치 발견 → spec 미해결 질문 추가** |
 | 2026-08-19 | T032·T033 | 테스트 18개 통과. **가드가 실제로 실패하는지 위반을 심어 역검증** — 경계값 리터럴 검사가 `33.0`을 놓쳐 값 비교 방식으로 교체 |
 | 2026-08-19 | T034·T035 | 6단계 문구·추천 24개 + UX Writing 린트. 역검증에서 `\b`가 한글에 안 먹는 것 발견, 패턴을 "땀 근처 수치"로 교체 |
 | 2026-08-19 | T040~T043 | 컬러 35 · 숫자 13 · 스타일 29. Figma 내보내기에서 스크립트로 생성 후 양방향 대조. **R6의 "48개"는 오기 — 48은 변수 전체, 컬러는 35** |
