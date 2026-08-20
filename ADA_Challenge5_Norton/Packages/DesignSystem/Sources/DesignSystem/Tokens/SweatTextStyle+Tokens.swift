@@ -156,6 +156,10 @@ extension SweatTextStyle {
     public static let title22Bold = SweatTextStyle(
         figmaName: "Title/22 Bold", size: 22, weight: .bold,
         lineHeightRatio: 1.2, tracking: -0.44)
+    /// `Stat/20` — SF Pro Semibold 20pt / 120% / -2%
+    public static let stat20 = SweatTextStyle(
+        figmaName: "Stat/20", size: 20, weight: .semibold,
+        lineHeightRatio: 1.2, tracking: -0.4)
     /// `Stat/20 Bold` — SF Pro Bold 20pt / 120% / -2%
     public static let stat20Bold = SweatTextStyle(
         figmaName: "Stat/20 Bold", size: 20, weight: .bold,
@@ -192,7 +196,8 @@ extension SweatTextStyle {
         option17, input17, button16, bodyStrong16,
         body15, bodyStrong15, chip15, body14,
         caption13, caption12, tab105, overline11,
-        title24Bold, title22Bold, stat20Bold, section15,
+        title24Bold, title22Bold, stat20Bold, stat20,
+        section15,
         list16, list125, body135, forecast16,
         label14Medium,
     ]

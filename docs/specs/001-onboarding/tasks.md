@@ -20,7 +20,7 @@
       `design(design-system): Chip 터치 타깃을 44pt로 확장`
 - [x] T011 Button 22 · Score 16 · TextField 16 여백을 토큰으로 정렬
       `design(design-system): 컴포넌트 여백을 space 토큰으로 정렬`
-- [ ] T012 Figma 컴포넌트를 T010·T011에 맞춰 수정
+- [x] T012 Figma 컴포넌트를 T010·T011에 맞춰 수정
       `design: Figma 컴포넌트 여백을 코드와 일치시킴` *(코드 변경 없음, 문서만)*
 
 ## 도메인
