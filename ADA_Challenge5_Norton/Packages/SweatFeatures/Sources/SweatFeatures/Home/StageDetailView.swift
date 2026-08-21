@@ -1,17 +1,25 @@
 import SwiftUI
 import DesignSystem
 import SweatDomain
+import WeatherData
 
 /// 등급 상세 — 왜 이 단계인지.
 public struct StageDetailView: View {
 
     private let observation: WeatherObservation
     private let stage: SweatStage
+    private let attribution: WeatherAttributionInfo?
     private let onBack: () -> Void
 
-    public init(observation: WeatherObservation, stage: SweatStage, onBack: @escaping () -> Void) {
+    public init(
+        observation: WeatherObservation,
+        stage: SweatStage,
+        attribution: WeatherAttributionInfo?,
+        onBack: @escaping () -> Void
+    ) {
         self.observation = observation
         self.stage = stage
+        self.attribution = attribution
         self.onBack = onBack
     }
 
@@ -49,6 +57,12 @@ public struct StageDetailView: View {
                     .sweatType(.body14)
                     .foregroundStyle(Ink.n600)
                     .padding(.top, Space.x4)
+
+                // 법적 요건이다. 날씨 값을 보여주는 화면에는 빠짐없이 둔다.
+                if let attribution {
+                    AttributionBlock(info: attribution)
+                        .padding(.top, Space.x6)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Space.gutter)

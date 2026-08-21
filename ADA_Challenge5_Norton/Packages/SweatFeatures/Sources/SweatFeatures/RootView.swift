@@ -66,7 +66,11 @@ public struct RootView: View {
                     detail = DetailPayload(observation: observation, stage: stage)
                 })
                 .navigationDestination(item: $detail) { payload in
-                    StageDetailView(observation: payload.observation, stage: payload.stage) {
+                    StageDetailView(
+                        observation: payload.observation,
+                        stage: payload.stage,
+                        attribution: store.attribution
+                    ) {
                         detail = nil
                     }
                     // 화면이 자체 뒤로가기를 갖고 있어 시스템 바를 숨긴다.
