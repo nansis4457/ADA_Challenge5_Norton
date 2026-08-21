@@ -1,7 +1,7 @@
 # [002] 홈 · 등급 상세 — 태스크
 
 **스펙** `docs/specs/002-home/spec.md`
-**브랜치** `002-home`
+**브랜치** `002-weather`
 
 > 태스크 하나 = 커밋 하나. `[P]`는 병렬 가능.
 > git 명령은 사람이 실행한다 (`docs/git-workflow.md` §0).
@@ -19,7 +19,8 @@
 - [x] T002b Figma 정정 — 헤더 문구를 `{시각} 기준`으로, 출처 블록 추가 — 2026-08-21 완료
       헤더 `오전 8:00 기준`, `Weather Attribution` 인스턴스를 홈·등급 상세 양쪽에 배치.
       Figma의 글자는 자리표시자다 — 실제 로고·링크는 실행 중 `WeatherAttribution`이 준다
-- [ ] T003 브랜치 `002-home` 생성, 스펙 Approved
+- [ ] T003 브랜치 `002-weather` 생성, 스펙 Approved — 브랜치는 만들었다. Approved만 남았다
+      폴더는 `002-home`, 브랜치는 `002-weather`다 (`git-workflow.md` §1)
 
 ## 도메인 — 네트워크 없이 전부 검증된다
 

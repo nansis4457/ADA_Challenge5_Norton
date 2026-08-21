@@ -29,18 +29,22 @@ SDD의 스펙 번호와 브랜치를 1:1로 묶는다. 브랜치 이름만 보�
 ```
 main                          항상 빌드 가능. 직접 푸시 금지.
 ├── 000-foundation            스펙 단위 작업 브랜치
-├── 002-home
+├── 002-weather
 └── fix/weather-cache-ttl     스펙 없는 버그 수정
 ```
 
 | 접두사 | 용도 | 예시 |
 |---|---|---|
-| `NNN-<slug>` | 스펙 구현 (`docs/specs/NNN-*`와 동일 이름) | `002-home` |
+| `NNN-<slug>` | 스펙 구현 (`docs/specs/NNN-*`와 같은 번호) | `002-weather` |
 | `fix/` | 버그 수정 | `fix/grid-conversion-seoul` |
 | `chore/` | 빌드 설정·의존성·문서 | `chore/swift6-migration` |
 | `docs/` | 문서만 변경 | `docs/update-rules` |
 
 작업 브랜치는 머지 후 삭제한다.
+
+**묶는 것은 번호지 슬러그가 아니다.** 슬러그는 작업 도중 바뀔 수 있고,
+폴더 이름을 따라 바꾸면 열려 있는 브랜치와 PR이 끊긴다. 그래서 002는
+폴더가 `002-home`, 브랜치가 `002-weather`다. **어긋나면 스펙의 `브랜치` 항목이 맞다.**
 
 ---
 
