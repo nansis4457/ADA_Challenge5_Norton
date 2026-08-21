@@ -77,7 +77,7 @@ struct HourlyForecastSection: View {
         ForecastLevel(profile.stage(forApparent: hour.apparentTemperature))
     }
     private func time(_ date: Date) -> String {
-        date.formatted(.dateTime.hour())
+        HomeCopy.Format.hour(date)
     }
     private func temperature(_ hour: HourlyForecast) -> String {
         "\(hour.temperature.formatted(.number.precision(.fractionLength(1))))°"
@@ -142,7 +142,7 @@ struct WeeklyForecastSection: View {
     private func weekday(_ date: Date) -> String {
         Calendar.current.isDateInToday(date)
             ? HomeCopy.Forecast.today
-            : date.formatted(.dateTime.weekday(.abbreviated))
+            : HomeCopy.Format.weekday(date)
     }
 }
 

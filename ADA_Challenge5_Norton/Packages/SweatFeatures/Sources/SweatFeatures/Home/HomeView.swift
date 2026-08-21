@@ -86,7 +86,7 @@ public struct HomeView: View {
                     .foregroundStyle(Ink.n900)
             }
             HStack(spacing: Space.x1) {
-                Text(HomeCopy.observedAt(observation.observedAt.formatted(date: .omitted, time: .shortened)))
+                Text(HomeCopy.observedAt(HomeCopy.Format.time(observation.observedAt)))
                 if let minutes = store.minutesSinceObservation, minutes >= 30 {
                     // 오래된 값을 최신인 척 보여주지 않는다.
                     Text("· \(HomeCopy.staleBadge(minutes: minutes))")

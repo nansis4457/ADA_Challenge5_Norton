@@ -1,3 +1,4 @@
+import Foundation
 import SweatDomain
 
 /// 홈과 등급 상세의 문구.
@@ -17,6 +18,32 @@ public enum HomeCopy {
     public static let detailLink = "더 알아보기 ›"
     /// 출처 로고를 눌렀을 때 무슨 일이 생기는지 VoiceOver에 알린다.
     public static let attributionHint = "날씨 데이터 출처 페이지 열기"
+
+    // MARK: 날짜·시각
+
+    /// 날짜와 시각도 문구다. 그래서 뷰가 아니라 여기서 만든다.
+    ///
+    /// **로케일을 한국어로 고정한다.** 화면 문구가 전부 한국어인데 번들에는
+    /// 한국어 로컬라이제이션이 없어서, `Locale.current`에 맡기면 한국어 기기에서도
+    /// `10:29 AM`·`Thu`가 나와 `오늘`과 뒤섞인다.
+    public enum Format {
+        static let korean = Locale(identifier: "ko_KR")
+
+        /// `오전 10:29` — 관측 시각.
+        public static func time(_ date: Date) -> String {
+            date.formatted(.dateTime.locale(korean).hour().minute())
+        }
+
+        /// `오전 10시` — 시간별 예보의 칸 제목.
+        public static func hour(_ date: Date) -> String {
+            date.formatted(.dateTime.locale(korean).hour())
+        }
+
+        /// `금` — 주간 예보의 요일.
+        public static func weekday(_ date: Date) -> String {
+            date.formatted(.dateTime.locale(korean).weekday(.abbreviated))
+        }
+    }
 
     // MARK: 위치 권한
 
