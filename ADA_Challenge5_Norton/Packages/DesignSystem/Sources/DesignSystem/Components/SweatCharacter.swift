@@ -40,13 +40,17 @@ public struct SweatCharacter: View {
         for x in [86.0, 118.0] {
             context.fill(
                 Path(roundedRect: rect(x, 168, 16, 52), cornerRadius: 8 * s),
-                with: .color(StageColor.top(stage).opacity(0.75))
+                with: .color(StageRole.outline(stage).opacity(0.55))
             )
         }
 
         // 몸통과 위쪽 하이라이트
         let body = rect(38, 40, 144, 144)
         context.fill(Path(ellipseIn: body), with: .color(StageColor.body(stage)))
+        // 1~3단계의 몸통 색은 배경과 대비가 1.1:1 수준이라 윤곽이 녹는다.
+        // 테두리가 있어야 형태가 보인다.
+        context.stroke(Path(ellipseIn: body), with: .color(StageRole.outline(stage)),
+                       lineWidth: 2.5 * s)
         // 위쪽 45%만 밝게. 원본 컨텍스트를 복사해 클립하므로 이후 그리기에 영향이 없다.
         var highlight = context
         highlight.clip(to: Path(rect(36, 38, 148, 67)))
@@ -138,8 +142,9 @@ public struct WeatherFace: View {
     public var body: some View {
         Canvas { context, _ in
             let s = size / 24
-            context.fill(Path(ellipseIn: CGRect(x: 2 * s, y: 2 * s, width: 20 * s, height: 20 * s)),
-                         with: .color(StageColor.body(stageForLevel)))
+            let circle = Path(ellipseIn: CGRect(x: 2 * s, y: 2 * s, width: 20 * s, height: 20 * s))
+            context.fill(circle, with: .color(StageColor.body(stageForLevel)))
+            context.stroke(circle, with: .color(StageRole.outline(stageForLevel)), lineWidth: 1.2 * s)
             for x in [8.6, 15.4] {
                 context.fill(
                     Path(ellipseIn: CGRect(x: (x - 1.5) * s, y: 8.9 * s, width: 3 * s, height: 3 * s)),

@@ -126,10 +126,10 @@ struct WeeklyForecastSection: View {
             WeatherFace(level: level.rawValue, size: 22)
             Text(HomeCopy.Forecast.levelName(level))
                 .sweatType(.list125)
-                .foregroundStyle(StageColor.top(stage.rawValue))
+                .foregroundStyle(StageRole.ink(stage.rawValue))
                 .frame(width: 56, alignment: .leading)
             RangeBar(range: day.lowTemperature...day.highTemperature, bounds: bounds,
-                     color: StageColor.top(stage.rawValue))
+                     color: StageRole.outline(stage.rawValue))
             Text("\(Int(day.lowTemperature))° \(Int(day.highTemperature))°")
                 .sweatType(.caption13).foregroundStyle(Ink.n600)
                 .frame(width: 64, alignment: .trailing)
