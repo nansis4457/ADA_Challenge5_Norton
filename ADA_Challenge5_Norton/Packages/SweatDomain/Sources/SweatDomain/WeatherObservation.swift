@@ -18,7 +18,7 @@ public enum WeatherSource: String, Sendable, Codable, CaseIterable {
 ///
 /// 체감온도는 저장하지 않고 **계산한다.** 소스가 주는 체감온도는 산식이 달라
 /// 쓰지 않는다 — 그러면 단계 기준이 둘이 된다.
-public struct WeatherObservation: Sendable, Codable, Equatable {
+public struct WeatherObservation: Sendable, Codable, Hashable {
 
     /// 기온 (℃)
     public let temperature: Double

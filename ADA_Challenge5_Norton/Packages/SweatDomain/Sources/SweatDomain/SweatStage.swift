@@ -48,6 +48,25 @@ public enum SweatStage: Int, CaseIterable, Sendable, Comparable {
         return SweatStage(rawValue: crossed + 1) ?? .six
     }
 
+    /// 막대로 보여줄 때의 눈금 범위 (℃).
+    ///
+    /// 첫 경계부터 마지막 경계까지다. **경계값에서 파생하므로 임의의 상수가 없다.**
+    /// 이보다 낮거나 높은 값은 양 끝에 붙는다.
+    ///
+    /// 과학적 척도가 아니라 **표시용**이다. "지금 어디쯤인지"를 눈으로 가늠하게 할 뿐이다.
+    public static var displayRange: ClosedRange<Double> {
+        (boundaries.first ?? 0) ... (boundaries.last ?? 1)
+    }
+
+    /// 체감온도를 눈금 위 0~1 위치로.
+    public static func displayPosition(of apparentTemperature: Double) -> Double {
+        guard apparentTemperature.isFinite else { return 0 }
+        let range = displayRange
+        let span = range.upperBound - range.lowerBound
+        guard span > 0 else { return 0 }
+        return min(max((apparentTemperature - range.lowerBound) / span, 0), 1)
+    }
+
     // MARK: - 파생 속성
 
     /// 안전 안내가 필요한 단계인가.
