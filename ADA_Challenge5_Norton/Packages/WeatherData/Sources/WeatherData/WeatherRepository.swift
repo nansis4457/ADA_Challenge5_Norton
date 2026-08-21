@@ -10,11 +10,22 @@ public actor WeatherRepository {
     public static let freshWindow: TimeInterval = 10 * 60
     /// 네트워크가 실패했을 때 이 시간 안의 캐시까지는 받아들인다.
     public static let staleWindow: TimeInterval = 60 * 60
+    /// 한 번의 조회를 이보다 오래 기다리지 않는다.
+    ///
+    /// 응답이 영영 오지 않는 경우가 실제로 있다. 시뮬레이터에서 WeatherKit 권한이
+    /// 서버에 전파되기 전에 호출하면 요청이 끝나지 않고, 화면은 회전만 계속한다.
+    /// 기다리다 실패로 넘어가야 캐시라도 보여주고 다시 시도할 수 있다.
+    public static let requestTimeout: Duration = .seconds(15)
 
     private let source: any WeatherSourcing
     private let cache: WeatherCache
     private let now: @Sendable () -> Date
     private let retryCount: Int
+    /// 예보는 메모리에만 담는다. 관측값과 달리 양이 크고, 앱을 다시 켜면
+    /// 어차피 새로 받는 편이 낫다.
+    private var forecasts: [String: WeatherForecast] = [:]
+    /// 출처 정보는 좌표와 무관하고 잘 바뀌지 않는다. 한 번 받으면 들고 있는다.
+    private var cachedAttribution: WeatherAttributionInfo?
 
     public init(
         source: any WeatherSourcing,
@@ -57,16 +68,73 @@ public actor WeatherRepository {
         }
     }
 
+    /// 시간별·주간 예보.
+    ///
+    /// 관측값과 같은 신선도 규칙을 따른다. 예보는 자주 바뀌지 않으므로
+    /// 캐시가 특히 값을 한다.
+    public func forecast(at coordinate: Coordinate) async throws -> WeatherForecast {
+        let key = Self.key(for: coordinate)
+        if let cached = forecasts[key], now().timeIntervalSince(cached.fetchedAt) < Self.freshWindow {
+            return cached
+        }
+        do {
+            let fresh = try await withTimeout(Self.requestTimeout) {
+                try await self.source.forecast(at: coordinate)
+            }
+            forecasts[key] = fresh
+            return fresh
+        } catch {
+            if let cached = forecasts[key],
+               now().timeIntervalSince(cached.fetchedAt) < Self.staleWindow {
+                return cached
+            }
+            throw error
+        }
+    }
+
+    /// 출처 정보. 실패하면 오류를 올린다 — 표기 없이 날씨를 보여줄 수 없다.
+    public func attribution() async throws -> WeatherAttributionInfo {
+        if let cachedAttribution { return cachedAttribution }
+        let fresh = try await withTimeout(Self.requestTimeout) {
+            try await self.source.attribution()
+        }
+        cachedAttribution = fresh
+        return fresh
+    }
+
     private func fetchWithRetry(at coordinate: Coordinate) async throws -> WeatherObservation {
         var lastError: (any Error)?
         for _ in 0...retryCount {
             do {
-                return try await source.currentObservation(at: coordinate)
+                return try await withTimeout(Self.requestTimeout) {
+                    try await self.source.currentObservation(at: coordinate)
+                }
             } catch {
                 lastError = error
             }
         }
         throw lastError ?? WeatherRepositoryError.unavailable
+    }
+
+    /// 주어진 시간 안에 끝나지 않으면 포기한다.
+    ///
+    /// 먼저 끝나는 쪽을 취하고 나머지는 취소한다.
+    private func withTimeout<T: Sendable>(
+        _ limit: Duration,
+        _ work: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await work() }
+            group.addTask {
+                try await Task.sleep(for: limit)
+                throw WeatherRepositoryError.timedOut
+            }
+            defer { group.cancelAll() }
+            guard let first = try await group.next() else {
+                throw WeatherRepositoryError.unavailable
+            }
+            return first
+        }
     }
 
     /// 좌표를 캐시 키로. 소수 셋째 자리(약 100m)면 같은 지점으로 본다.
@@ -83,4 +151,6 @@ public actor WeatherRepository {
 public enum WeatherRepositoryError: Error, Equatable {
     /// 소스도 캐시도 값을 주지 못했다.
     case unavailable
+    /// 정해진 시간 안에 응답이 오지 않았다.
+    case timedOut
 }

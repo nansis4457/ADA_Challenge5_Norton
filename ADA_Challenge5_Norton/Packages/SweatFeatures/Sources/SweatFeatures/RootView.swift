@@ -1,5 +1,6 @@
 import SwiftUI
 import SweatPersistence
+import WeatherData
 
 /// 앱의 첫 화면을 정한다.
 ///
@@ -13,11 +14,19 @@ public struct RootView: View {
     }
 
     private let store: ProfileStore
+    private let weather: WeatherRepository
+    private let location: any LocationProviding
     @State private var screen: Screen
     @State private var profile: UserProfile
 
-    public init(store: ProfileStore = ProfileStore()) {
+    public init(
+        store: ProfileStore = ProfileStore(),
+        weather: WeatherRepository = WeatherRepository(source: WeatherKitSource()),
+        location: any LocationProviding = SystemLocationProvider()
+    ) {
         self.store = store
+        self.weather = weather
+        self.location = location
         let loaded = store.load()
         _profile = State(initialValue: loaded)
         _screen = State(initialValue: loaded.hasCompletedOnboarding ? .home : .onboarding(.initial))
@@ -34,10 +43,9 @@ public struct RootView: View {
             .id(mode)
 
         case .home:
-            StagePlaceholderView(
-                profile: profile,
-                onEditSensitivity: { screen = .onboarding(.editing(.sensitivity)) },
-                onEditMovement: { screen = .onboarding(.editing(.movement)) }
+            HomeView(
+                store: HomeStore(repository: weather, location: location) { profile },
+                onOpenDetail: {}   // 등급 상세는 T050에서 연결한다
             )
         }
     }

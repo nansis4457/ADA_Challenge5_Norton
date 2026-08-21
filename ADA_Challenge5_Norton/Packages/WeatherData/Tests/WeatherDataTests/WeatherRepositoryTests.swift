@@ -17,6 +17,27 @@ actor StubSource: WeatherSourcing {
 
     init(_ behavior: Behavior) { self.behavior = behavior }
 
+    func attribution() async throws -> WeatherAttributionInfo {
+        WeatherAttributionInfo(
+            serviceName: "Test Weather", legalText: "테스트 표기",
+            legalPageURL: URL(string: "https://example.com/legal")!,
+            markLightURL: URL(string: "https://example.com/light.png")!,
+            markDarkURL: URL(string: "https://example.com/dark.png")!)
+    }
+
+    func forecast(at coordinate: Coordinate) async throws -> WeatherForecast {
+        callCount += 1
+        switch behavior {
+        case .succeed:
+            return WeatherForecast(hourly: [], daily: [], fetchedAt: Date())
+        case .fail(let error):
+            throw error
+        case .failThenSucceed(let times, _):
+            if callCount <= times { throw StubError.transient }
+            return WeatherForecast(hourly: [], daily: [], fetchedAt: Date())
+        }
+    }
+
     func currentObservation(at coordinate: Coordinate) async throws -> WeatherObservation {
         callCount += 1
         switch behavior {
@@ -234,5 +255,78 @@ struct WeatherCacheTests {
     func ageNeverNegative() {
         let future = entry(fetchedAt: Date().addingTimeInterval(600))
         #expect(future.age(at: Date()) == 0)
+    }
+}
+
+@Suite("일별 최고 체감온도")
+struct DailyApparentHighTests {
+
+    func hour(_ hoursFromMidnight: Int, temp: Double, humidity: Double) -> HourlyForecast {
+        let midnight = Calendar.current.startOfDay(for: Date())
+        return HourlyForecast(
+            date: midnight.addingTimeInterval(Double(hoursFromMidnight) * 3600),
+            temperature: temp, relativeHumidity: humidity
+        )
+    }
+
+    @Test("그날 시간별 값 중 최댓값을 고른다")
+    func picksMaximumOfDay() {
+        let today = Date()
+        let hours = [hour(6, temp: 24, humidity: 80),
+                     hour(14, temp: 33, humidity: 70),   // 가장 높다
+                     hour(20, temp: 28, humidity: 75)]
+        let result = DailyApparentHigh.fromHourly(hours, on: today)
+        #expect(result == hours[1].apparentTemperature)
+    }
+
+    @Test("해당 날짜 값이 없으면 nil")
+    func nilWhenNoHoursForDay() {
+        let nextWeek = Date().addingTimeInterval(7 * 86400)
+        #expect(DailyApparentHigh.fromHourly([hour(14, temp: 33, humidity: 70)], on: nextWeek) == nil)
+    }
+
+    @Test("근사는 최저습도를 쓴다")
+    func estimateUsesMinimumHumidity() {
+        // 최고기온은 대개 습도가 낮은 한낮에 나타난다.
+        let withMin = DailyApparentHigh.estimate(highTemperature: 33, minimumHumidity: 45)
+        let withMax = ApparentTemperature.summer(temperature: 33, relativeHumidity: 85)
+        #expect(withMin < withMax, "최대습도를 쓰면 과대평가된다")
+    }
+}
+
+/// 영영 끝나지 않는 소스. 시뮬레이터에서 WeatherKit 권한이 서버에 전파되기 전
+/// 실제로 이런 일이 일어났다.
+actor HangingSource: WeatherSourcing {
+    func currentObservation(at coordinate: Coordinate) async throws -> WeatherObservation {
+        try await Task.sleep(for: .seconds(600))
+        fatalError("여기 오면 안 된다")
+    }
+    func forecast(at coordinate: Coordinate) async throws -> WeatherForecast {
+        try await Task.sleep(for: .seconds(600))
+        fatalError("여기 오면 안 된다")
+    }
+    func attribution() async throws -> WeatherAttributionInfo {
+        try await Task.sleep(for: .seconds(600))
+        fatalError("여기 오면 안 된다")
+    }
+}
+
+@Suite("응답 없는 소스")
+struct TimeoutTests {
+
+    let seoul = Coordinate(latitude: 37.5665, longitude: 126.9780)
+
+    @Test("응답이 없으면 무한정 기다리지 않는다", .timeLimit(.minutes(1)))
+    func doesNotHangForever() async {
+        // 실제 타임아웃(15초)을 그대로 기다리지 않도록 재시도를 끈다.
+        let repository = WeatherRepository(
+            source: HangingSource(), cache: WeatherCache(directory: nil), retryCount: 0)
+
+        let started = Date()
+        await #expect(throws: (any Error).self) {
+            try await repository.currentObservation(at: seoul)
+        }
+        let elapsed = Date().timeIntervalSince(started)
+        #expect(elapsed < 30, "타임아웃보다 오래 걸리면 안 된다: \(elapsed)초")
     }
 }

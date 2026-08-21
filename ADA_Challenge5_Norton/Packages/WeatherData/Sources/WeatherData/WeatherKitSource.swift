@@ -21,6 +21,57 @@ public struct WeatherKitSource: WeatherSourcing {
         return Self.observation(from: current)
     }
 
+    public func forecast(at coordinate: Coordinate) async throws -> WeatherForecast {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let weather = try await service.weather(for: location)
+        let hourly = weather.hourlyForecast.map(Self.hourly(from:))
+        let daily = weather.dailyForecast.map { Self.daily(from: $0, hourly: hourly) }
+        return WeatherForecast(hourly: hourly, daily: daily, fetchedAt: Date())
+    }
+
+    public func attribution() async throws -> WeatherAttributionInfo {
+        let source = try await service.attribution
+        return WeatherAttributionInfo(
+            serviceName: source.serviceName,
+            legalText: source.legalAttributionText,
+            legalPageURL: source.legalPageURL,
+            markLightURL: source.combinedMarkLightURL,
+            markDarkURL: source.combinedMarkDarkURL
+        )
+    }
+
+    static func hourly(from hour: HourWeather) -> HourlyForecast {
+        HourlyForecast(
+            date: hour.date,
+            temperature: hour.temperature.converted(to: .celsius).value,
+            relativeHumidity: hour.humidity * 100
+        )
+    }
+
+    /// 하루 예보를 도메인 형태로.
+    ///
+    /// 단계는 **그날 최고 체감온도**로 정한다. 시간별 예보에 그 날짜가 있으면
+    /// 거기서 최댓값을 뽑고, 없으면 근사한다.
+    ///
+    /// - Note: `DayWeather`에는 습도 대푯값이 없고 최대·최소만 있다. 최댓값은 주로
+    ///   기온이 낮은 새벽에 나타나므로, 근사에는 **최저습도**를 쓴다. 최고기온과
+    ///   대개 같은 시간대다.
+    static func daily(from day: DayWeather, hourly: [HourlyForecast]) -> DailyForecast {
+        let high = day.highTemperature.converted(to: .celsius).value
+        let low = day.lowTemperature.converted(to: .celsius).value
+        let fromHourly = DailyApparentHigh.fromHourly(hourly, on: day.date)
+        return DailyForecast(
+            date: day.date,
+            lowTemperature: low,
+            highTemperature: high,
+            apparentHigh: fromHourly ?? DailyApparentHigh.estimate(
+                highTemperature: high,
+                minimumHumidity: day.minimumHumidity * 100
+            ),
+            isApparentHighEstimated: fromHourly == nil
+        )
+    }
+
     /// WeatherKit 값을 도메인 형태로 옮긴다.
     ///
     /// - Note: `humidity`는 **0~1 비율**이다. 기상청 산식은 상대습도를 %로 받으므로

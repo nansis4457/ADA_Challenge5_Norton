@@ -12,12 +12,13 @@ let package = Package(
     dependencies: [
         .package(path: "../SweatDomain"),
         .package(path: "../SweatPersistence"),
-        .package(path: "../DesignSystem")
+        .package(path: "../DesignSystem"),
+        .package(path: "../WeatherData")
     ],
     targets: [
         .target(
             name: "SweatFeatures",
-            dependencies: ["SweatDomain", "SweatPersistence", "DesignSystem"],
+            dependencies: ["SweatDomain", "SweatPersistence", "DesignSystem", "WeatherData"],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         ),
         .testTarget(

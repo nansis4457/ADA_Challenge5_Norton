@@ -15,6 +15,8 @@ public enum HomeCopy {
     public static func staleBadge(minutes: Int) -> String { "\(minutes)분 전" }
 
     public static let detailLink = "더 알아보기 ›"
+    /// 출처 로고를 눌렀을 때 무슨 일이 생기는지 VoiceOver에 알린다.
+    public static let attributionHint = "날씨 데이터 출처 페이지 열기"
 
     // MARK: 위치 권한
 
@@ -38,6 +40,31 @@ public enum HomeCopy {
         }
     }
 
+    // MARK: 예보
+
+    public enum Forecast {
+        public static let hourly = "시간별 예보"
+        public static let weekly = "주간 예보"
+        public static let today = "오늘"
+
+        public static func levelName(_ level: ForecastLevel) -> String {
+            switch level {
+            case .comfortable: "쾌적"
+            case .moderate:    "보통"
+            case .sweaty:      "땀 주의"
+            case .hot:         "더움"
+            }
+        }
+    }
+
+    // MARK: 실패
+
+    public enum Failure {
+        public static let title = "날씨를 가져오지 못했어요"
+        public static let body = "네트워크를 확인하고 다시 시도해보세요."
+        public static let retry = "다시 시도"
+    }
+
     // MARK: 관측값
 
     public enum Observation {
@@ -48,11 +75,14 @@ public enum HomeCopy {
 
     /// 린트·테스트용 전체 목록.
     public static var allStrings: [String] {
-        var result = [detailLink, observedAt("오전 8:00"), staleBadge(minutes: 12),
+        var result = [detailLink, attributionHint, observedAt("오전 8:00"), staleBadge(minutes: 12),
                       Location.deniedTitle, Location.deniedBody,
                       Location.unavailableTitle, Location.unavailableBody, Location.choosePrompt,
+                      Failure.title, Failure.body, Failure.retry,
+                      Forecast.hourly, Forecast.weekly, Forecast.today,
                       Observation.temperature, Observation.humidity, Observation.apparent]
         result += FallbackRegion.allCases.map(Location.name)
+        result += ForecastLevel.allCases.map(Forecast.levelName)
         return result
     }
 }
