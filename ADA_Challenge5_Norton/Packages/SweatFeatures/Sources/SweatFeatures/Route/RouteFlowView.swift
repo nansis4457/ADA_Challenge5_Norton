@@ -5,15 +5,27 @@ struct RouteFlowView: View {
     private enum Destination: Hashable {
         case input
         case result
+        case move
     }
 
     @State private var store: RouteStore
     @State private var path: [Destination] = []
-    @State private var pendingStartRoute: WalkingRoute?
-    @State private var showsStartPending = false
+    @State private var moveStore: MoveStore?
+    @State private var showsFinished = false
+    private let moveRuntime: MoveBackgroundRuntime
 
-    init(stage: @escaping () -> SweatStage) {
+    init(
+        stage: @escaping () -> SweatStage,
+        moveRuntime: MoveBackgroundRuntime = .shared,
+        now: Date = Date()
+    ) {
+        self.moveRuntime = moveRuntime
         _store = State(initialValue: RouteStore(stage: stage))
+        moveRuntime.resumeIfNeeded(now: now)
+        if let restoredStore = moveRuntime.activeStore {
+            _path = State(initialValue: [.move])
+            _moveStore = State(initialValue: restoredStore)
+        }
     }
 
     var body: some View {
@@ -29,8 +41,17 @@ struct RouteFlowView: View {
                     }
                 case .result:
                     RouteResultView(store: store) { route in
-                        pendingStartRoute = route
-                        showsStartPending = true
+                        moveStore = moveRuntime.begin(route: route)
+                        path.append(.move)
+                    }
+                case .move:
+                    if let moveStore {
+                        MoveView(store: moveStore) { _ in
+                            showsFinished = true
+                            path = []
+                            self.moveStore = nil
+                            moveRuntime.releaseFinishedMove()
+                        }
                     }
                 }
             }
@@ -38,17 +59,10 @@ struct RouteFlowView: View {
             .toolbar(.hidden, for: .navigationBar)
             #endif
         }
-        .alert(RouteCopy.startPendingTitle, isPresented: $showsStartPending) {
-            Button(RouteCopy.confirm, role: .cancel) {}
+        .alert(MoveCopy.finishedTitle, isPresented: $showsFinished) {
+            Button(MoveCopy.confirm, role: .cancel) {}
         } message: {
-            if let pendingStartRoute {
-                Text(RouteCopy.startPendingMessage(
-                    origin: pendingStartRoute.origin.name,
-                    destination: pendingStartRoute.destination.name
-                ))
-            } else {
-                Text(RouteCopy.startPendingBody)
-            }
+            Text(MoveCopy.finishedBody)
         }
     }
 }

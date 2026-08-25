@@ -17,6 +17,7 @@ cd "$(dirname "$0")/.."
 
 TARGETS=(
   "ADA_Challenge5_Norton/ADA_Challenge5_Norton"
+  "ADA_Challenge5_Norton/MoveLiveActivity"
   "ADA_Challenge5_Norton/Packages/SweatFeatures/Sources"
 )
 
@@ -56,8 +57,8 @@ report error "SwiftUI 기본 색상" \
   '\.(foregroundStyle|foregroundColor|background|fill|tint|stroke|strokeBorder)\(\s*\.(red|orange|yellow|green|mint|teal|cyan|blue|indigo|purple|pink|brown|gray|black|white)\b'
 
 report error "폰트 리터럴" \
-  ".sweatType(.body15) 처럼 텍스트 스타일 토큰을 쓴다" \
-  '\.font\(\s*\.(system|custom)\('
+    ".sweatType(.body15) 처럼 텍스트 스타일 토큰을 쓴다" \
+    '\.font\('
 
 report warning "숫자 모서리 반경" \
   "Radius.sm · md · lg · xl · pill 을 쓴다" \

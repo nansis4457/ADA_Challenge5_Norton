@@ -19,9 +19,16 @@ struct MainTabView: View {
     @State private var selectedTab: AppTab = .home
     @State private var detail: DetailPayload?
     private let home: HomeStore
+    private let moveRuntime: MoveBackgroundRuntime
 
-    init(home: HomeStore) {
+    init(
+        home: HomeStore,
+        moveRuntime: MoveBackgroundRuntime = .shared
+    ) {
         self.home = home
+        self.moveRuntime = moveRuntime
+        moveRuntime.resumeIfNeeded()
+        _selectedTab = State(initialValue: moveRuntime.hasActiveMove ? .map : .home)
     }
 
     var body: some View {
@@ -30,7 +37,10 @@ struct MainTabView: View {
                 homeTab
             }
             Tab(MainTabCopy.map, systemImage: "map", value: AppTab.map) {
-                RouteFlowView(stage: { home.stage ?? .one })
+                RouteFlowView(
+                    stage: { home.stage ?? .one },
+                    moveRuntime: moveRuntime
+                )
             }
             Tab(MainTabCopy.me, systemImage: "person", value: AppTab.me) {
                 NavigationStack {
