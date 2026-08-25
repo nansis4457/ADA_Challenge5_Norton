@@ -2,11 +2,39 @@ import Foundation
 import Testing
 @testable import SweatFeatures
 import SweatDomain
+import WeatherData
 
 /// 권한 상태를 마음대로 만드는 스텁.
 struct StubLocationProvider: LocationProviding {
     let outcome: LocationOutcome
     func currentLocation() async -> LocationOutcome { outcome }
+}
+
+struct StubLocationNameProvider: LocationNameProviding {
+    let value: String?
+    func name(for coordinate: Coordinate) async -> String? { value }
+}
+
+actor LocationTestWeatherSource: WeatherSourcing {
+    func currentObservation(at coordinate: Coordinate) async throws -> WeatherObservation {
+        WeatherObservation(
+            temperature: 31.5, relativeHumidity: 78, windSpeed: 1.1,
+            observedAt: Date(), source: .appleWeather
+        )
+    }
+
+    func forecast(at coordinate: Coordinate) async throws -> WeatherForecast {
+        WeatherForecast(hourly: [], daily: [], fetchedAt: Date())
+    }
+
+    func attribution() async throws -> WeatherAttributionInfo {
+        WeatherAttributionInfo(
+            serviceName: "Test Weather", legalText: "Test",
+            legalPageURL: URL(string: "https://example.com/legal")!,
+            markLightURL: URL(string: "https://example.com/light.png")!,
+            markDarkURL: URL(string: "https://example.com/dark.png")!
+        )
+    }
 }
 
 @Suite("위치와 지역 대체")
@@ -21,6 +49,44 @@ struct LocationTests {
     @Test("거부와 사용 불가를 구분한다")
     func deniedAndUnavailableAreDistinct() {
         #expect(LocationOutcome.denied != LocationOutcome.unavailable)
+    }
+
+    @Test("GPS 좌표의 지역명을 홈 저장소에 보관한다 (R3)")
+    func resolvedPlaceNameIsStored() async {
+        let coordinate = Coordinate(latitude: 36.0190, longitude: 129.3435)
+        let store = HomeStore(
+            repository: WeatherRepository(
+                source: LocationTestWeatherSource(),
+                cache: WeatherCache(directory: nil)
+            ),
+            location: StubLocationProvider(outcome: .located(coordinate)),
+            locationName: StubLocationNameProvider(value: "포항시")
+        ) { .default }
+
+        await store.load()
+
+        #expect(store.phase == .ready)
+        #expect(store.placeName == "포항시")
+        #expect(store.region == nil)
+    }
+
+    @Test("역지오코딩 실패가 날씨 표시를 막지 않는다")
+    func geocodingFailureDoesNotBlockWeather() async {
+        let coordinate = Coordinate(latitude: 36.0190, longitude: 129.3435)
+        let store = HomeStore(
+            repository: WeatherRepository(
+                source: LocationTestWeatherSource(),
+                cache: WeatherCache(directory: nil)
+            ),
+            location: StubLocationProvider(outcome: .located(coordinate)),
+            locationName: StubLocationNameProvider(value: nil)
+        ) { .default }
+
+        await store.load()
+
+        #expect(store.phase == .ready)
+        #expect(store.observation != nil)
+        #expect(store.placeName == nil)
     }
 
     // MARK: 대체 지역

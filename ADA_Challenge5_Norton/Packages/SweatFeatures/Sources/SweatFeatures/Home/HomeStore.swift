@@ -25,18 +25,23 @@ public final class HomeStore {
     public private(set) var attribution: WeatherAttributionInfo?
     /// 위치 권한이 없어 사용자가 고른 지역.
     public private(set) var region: FallbackRegion?
+    /// GPS 좌표를 역지오코딩한 지역명. 실패하면 뷰가 `현재 위치`로 대신한다.
+    public private(set) var placeName: String?
 
     private let repository: WeatherRepository
     private let location: any LocationProviding
+    private let locationName: any LocationNameProviding
     private let profile: () -> UserProfile
 
     public init(
         repository: WeatherRepository,
         location: any LocationProviding,
+        locationName: any LocationNameProviding = SystemLocationNameProvider(),
         profile: @escaping () -> UserProfile
     ) {
         self.repository = repository
         self.location = location
+        self.locationName = locationName
         self.profile = profile
     }
 
@@ -83,6 +88,11 @@ public final class HomeStore {
             switch await location.currentLocation() {
             case .located(let value):
                 coordinate = value
+                // 역지오코딩 때문에 첫 날씨 표시가 늦어지지 않게 동시에 시작한다.
+                let nameTask = Task { await locationName.name(for: value) }
+                await loadWeather(at: coordinate)
+                placeName = await nameTask.value
+                return
             case .denied:
                 phase = .needsRegion(reason: .denied)
                 return
@@ -98,6 +108,7 @@ public final class HomeStore {
     /// 사용자가 지역을 골랐다.
     public func select(_ region: FallbackRegion) async {
         self.region = region
+        placeName = nil
         phase = .loading
         await loadWeather(at: region.coordinate)
     }

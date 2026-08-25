@@ -53,6 +53,8 @@ public enum HomeCopy {
         public static let unavailableTitle = "위치를 가져오지 못했어요"
         public static let unavailableBody = "잠시 후 다시 시도하거나 지역을 직접 골라보세요."
         public static let choosePrompt = "지역 선택"
+        /// 역지오코딩이 실패해도 위치 헤더를 비우지 않는다.
+        public static let current = "현재 위치"
 
         public static func name(_ region: FallbackRegion) -> String {
             switch region {
@@ -82,6 +84,25 @@ public enum HomeCopy {
             case .hot:         "더움"
             }
         }
+
+        /// 시간별 예보가 닿지 않는 날의 고지 (규칙 「추정치는 추정치로」).
+        ///
+        /// 먼 날짜의 단계는 시간별 최고 체감온도가 아니라 근삿값에서 나온다.
+        /// 같은 모양의 얼굴로 나란히 놓으면 같은 근거로 보이므로 밝힌다.
+        public static let estimatedNote = "먼 날짜의 단계는 근삿값이에요"
+
+        /// VoiceOver가 읽는 주간 예보 한 줄.
+        public static func dayLabel(_ weekday: String, _ level: ForecastLevel,
+                                    low: Int, high: Int) -> String {
+            "\(weekday), \(levelName(level)), 최저 \(low)도, 최고 \(high)도"
+        }
+    }
+
+    /// VoiceOver가 읽는 마스코트.
+    ///
+    /// 마스코트는 장식이 아니다 — 단계를 말로 전달한다 (R14).
+    public static func mascotLabel(stage: Int, state: String, headline: String) -> String {
+        "\(stage)단계, \(state). \(headline)"
     }
 
     // MARK: 실패
@@ -103,8 +124,12 @@ public enum HomeCopy {
     /// 린트·테스트용 전체 목록.
     public static var allStrings: [String] {
         var result = [detailLink, attributionHint, observedAt("오전 8:00"), staleBadge(minutes: 12),
+                      Forecast.estimatedNote,
+                      Forecast.dayLabel("금", .sweaty, low: 26, high: 33),
+                      mascotLabel(stage: 3, state: "땀 불편 높음", headline: "오늘은 땀이 많이 날 수 있어요"),
                       Location.deniedTitle, Location.deniedBody,
                       Location.unavailableTitle, Location.unavailableBody, Location.choosePrompt,
+                      Location.current,
                       Failure.title, Failure.body, Failure.retry,
                       Forecast.hourly, Forecast.weekly, Forecast.today,
                       Observation.temperature, Observation.humidity, Observation.apparent]

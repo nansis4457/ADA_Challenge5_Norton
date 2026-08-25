@@ -108,6 +108,13 @@ struct WeeklyForecastSection: View {
             VStack(spacing: 2) {
                 ForEach(visible, id: \.date) { day in row(day) }
             }
+
+            // 시간별 예보가 닿지 않는 날이 섞여 있으면 밝힌다 (「추정치는 추정치로」).
+            if visible.contains(where: \.isApparentHighEstimated) {
+                Text(HomeCopy.Forecast.estimatedNote)
+                    .sweatType(.caption12)
+                    .foregroundStyle(Ink.n400)
+            }
         }
         .padding(.horizontal, Space.gutter)
         .padding(.top, Space.x4)
@@ -136,7 +143,9 @@ struct WeeklyForecastSection: View {
         }
         .padding(.vertical, 7)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(weekday(day.date)), \(HomeCopy.Forecast.levelName(level)), 최저 \(Int(day.lowTemperature))도, 최고 \(Int(day.highTemperature))도")
+        .accessibilityLabel(HomeCopy.Forecast.dayLabel(weekday(day.date), level,
+                                                       low: Int(day.lowTemperature),
+                                                       high: Int(day.highTemperature)))
     }
 
     private func weekday(_ date: Date) -> String {
