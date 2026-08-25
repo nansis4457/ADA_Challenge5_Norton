@@ -20,6 +20,7 @@ struct ProfileStoreTests {
         #expect(store.load().sensitivity == .normal)
         #expect(store.load().transport == .subway)
         #expect(store.load().outdoorDuration == .twentyToForty)
+        #expect(store.load().usesCurrentLocation == true)
         #expect(store.load().hasCompletedOnboarding == false)
     }
 
@@ -30,6 +31,7 @@ struct ProfileStoreTests {
         profile.sensitivity = .high
         profile.transport = .bike
         profile.outdoorDuration = .over40
+        profile.usesCurrentLocation = false
         profile.hasCompletedOnboarding = true
         profile.calibrationOffset = 0.6
 
@@ -56,6 +58,7 @@ struct ProfileStoreTests {
         #expect(loaded.sensitivity == .high)
         #expect(loaded.hasCompletedOnboarding == true)
         #expect(loaded.transport == UserProfile.default.transport, "없는 필드는 기본값")
+        #expect(loaded.usesCurrentLocation == true, "기존 사용자는 현재 위치 동작을 유지한다")
     }
 
     @Test("reset은 기본값으로 되돌린다")

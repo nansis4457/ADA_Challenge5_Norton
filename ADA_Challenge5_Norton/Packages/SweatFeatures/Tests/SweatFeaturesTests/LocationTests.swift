@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import SweatFeatures
 import SweatDomain
+import SweatPersistence
 import WeatherData
 
 /// 권한 상태를 마음대로 만드는 스텁.
@@ -49,6 +50,29 @@ struct LocationTests {
     @Test("거부와 사용 불가를 구분한다")
     func deniedAndUnavailableAreDistinct() {
         #expect(LocationOutcome.denied != LocationOutcome.unavailable)
+        #expect(LocationOutcome.deferred != LocationOutcome.denied)
+        #expect(LocationOutcome.deferred != LocationOutcome.unavailable)
+    }
+
+    @Test("온보딩에서 위치 사용을 미루면 홈이 시스템 권한을 다시 묻지 않는다 (R17)")
+    func deferredLocationDoesNotRequestAgain() async {
+        let provider = SpyLocationProvider(
+            outcome: .located(Coordinate(latitude: 36.0190, longitude: 129.3435))
+        )
+        var profile = UserProfile.default
+        profile.usesCurrentLocation = false
+        let store = HomeStore(
+            repository: WeatherRepository(
+                source: LocationTestWeatherSource(),
+                cache: WeatherCache(directory: nil)
+            ),
+            location: provider
+        ) { profile }
+
+        await store.load()
+
+        #expect(await provider.recordedCallCount() == 0)
+        #expect(store.phase == HomeStore.Phase.needsRegion(reason: LocationOutcome.deferred))
     }
 
     @Test("GPS 좌표의 지역명을 홈 저장소에 보관한다 (R3)")

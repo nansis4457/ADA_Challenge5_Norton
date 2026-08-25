@@ -4,6 +4,22 @@ import Testing
 import SweatDomain
 import SweatPersistence
 
+actor SpyLocationProvider: LocationProviding {
+    let outcome: LocationOutcome
+    private(set) var callCount = 0
+
+    init(outcome: LocationOutcome) {
+        self.outcome = outcome
+    }
+
+    func currentLocation() async -> LocationOutcome {
+        callCount += 1
+        return outcome
+    }
+
+    func recordedCallCount() -> Int { callCount }
+}
+
 @Suite("온보딩 흐름")
 struct OnboardingFlowTests {
 
@@ -22,15 +38,45 @@ struct OnboardingFlowTests {
         #expect(flow.primaryActionTitle == OnboardingCopy.next)
     }
 
-    @Test("세 단계를 순서대로 지난다")
+    @Test("네 단계를 순서대로 지난다")
     func advancesThroughSteps() {
         var finished = false
         let flow = OnboardingFlow(store: makeStore(), mode: .initial) { finished = true }
         flow.advance()
         #expect(flow.step == .movement)
         flow.advance()
+        #expect(flow.step == .location)
+        flow.skipLocation()
         #expect(flow.step == .notification)
         #expect(finished == false, "알림 단계는 CTA로 끝난다")
+    }
+
+    @Test("위치 허용 CTA만 시스템 위치 요청을 실행하고 알림 단계로 간다 (R15)")
+    func locationAllowRequestsThenAdvances() async {
+        let provider = SpyLocationProvider(outcome: .denied)
+        let flow = OnboardingFlow(store: makeStore(), location: provider) {}
+        flow.advance()
+        flow.advance()
+
+        await flow.allowLocation()
+
+        #expect(await provider.recordedCallCount() == 1)
+        #expect(flow.profile.usesCurrentLocation == true)
+        #expect(flow.step == .notification, "거부도 정상 결과라 다음 단계로 가야 한다")
+    }
+
+    @Test("위치 나중에는 시스템 요청 없이 알림 단계로 간다 (R16)")
+    func locationSkipDoesNotRequest() async {
+        let provider = SpyLocationProvider(outcome: .located(.init(latitude: 37.5, longitude: 127)))
+        let flow = OnboardingFlow(store: makeStore(), location: provider) {}
+        flow.advance()
+        flow.advance()
+
+        flow.skipLocation()
+
+        #expect(await provider.recordedCallCount() == 0)
+        #expect(flow.profile.usesCurrentLocation == false)
+        #expect(flow.step == .notification)
     }
 
     @Test("온보딩을 마치면 저장되고 완료 표시가 남는다 (R2, R3)")
@@ -40,6 +86,9 @@ struct OnboardingFlowTests {
         flow.select(Sensitivity.high)
         flow.select(Transport.bike)
         flow.select(OutdoorDuration.over40)
+        flow.advance()
+        flow.advance()
+        flow.skipLocation()
         flow.skipNotifications()
 
         let saved = store.load()
@@ -47,6 +96,7 @@ struct OnboardingFlowTests {
         #expect(saved.sensitivity == .high)
         #expect(saved.transport == .bike)
         #expect(saved.outdoorDuration == .over40)
+        #expect(saved.usesCurrentLocation == false)
         #expect(saved.wantsNotification == false)
     }
 
