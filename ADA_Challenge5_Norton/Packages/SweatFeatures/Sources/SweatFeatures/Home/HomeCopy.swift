@@ -75,6 +75,13 @@ public enum HomeCopy {
         public static let hourly = "시간별 예보"
         public static let weekly = "주간 예보"
         public static let today = "오늘"
+        public static let dateColumn = "날짜"
+        public static let stageColumn = "땀 단계"
+        public static let temperatureColumn = "기온"
+        public static let humidityColumn = "습도"
+        public static let temperatureRangeColumn = "기온 범위"
+        public static let lowColumn = "최저"
+        public static let highColumn = "최고"
 
         public static func levelName(_ level: ForecastLevel) -> String {
             switch level {
@@ -132,6 +139,10 @@ public enum HomeCopy {
                       Location.current,
                       Failure.title, Failure.body, Failure.retry,
                       Forecast.hourly, Forecast.weekly, Forecast.today,
+                      Forecast.dateColumn, Forecast.stageColumn,
+                      Forecast.temperatureColumn, Forecast.humidityColumn,
+                      Forecast.temperatureRangeColumn,
+                      Forecast.lowColumn, Forecast.highColumn,
                       Observation.temperature, Observation.humidity, Observation.apparent]
         result += FallbackRegion.allCases.map(Location.name)
         result += ForecastLevel.allCases.map(Forecast.levelName)
