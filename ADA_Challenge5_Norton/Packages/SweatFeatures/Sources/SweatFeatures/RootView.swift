@@ -6,7 +6,7 @@ import SweatDomain
 /// 앱의 첫 화면을 정한다.
 ///
 /// 온보딩을 마쳤는지에 따라 갈린다. 마치기 전에 앱을 껐다 켜면 처음부터 다시 한다 —
-/// 3단계짜리 흐름에 중간 저장을 넣을 이유가 없다.
+/// 짧은 온보딩 흐름에 중간 저장을 넣을 이유가 없다.
 public struct RootView: View {
 
     private enum Screen: Equatable {
@@ -39,7 +39,7 @@ public struct RootView: View {
     public var body: some View {
         switch screen {
         case .onboarding(let mode):
-            OnboardingView(flow: OnboardingFlow(store: store, mode: mode) {
+            OnboardingView(flow: OnboardingFlow(store: store, mode: mode, location: location) {
                 profile = store.load()
                 screen = .home
             })

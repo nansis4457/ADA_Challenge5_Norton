@@ -14,17 +14,22 @@ let package = Package(
         .package(path: "../SweatPersistence"),
         .package(path: "../DesignSystem"),
         .package(path: "../WeatherData"),
-        .package(path: "../RouteData")
+        .package(path: "../RouteData"),
+        .package(path: "../MoveData"),
+        .package(path: "../MoveActivitySupport")
     ],
     targets: [
         .target(
             name: "SweatFeatures",
-            dependencies: ["SweatDomain", "SweatPersistence", "DesignSystem", "WeatherData", "RouteData"],
+            dependencies: [
+                "SweatDomain", "SweatPersistence", "DesignSystem", "WeatherData", "RouteData",
+                "MoveData", "MoveActivitySupport",
+            ],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         ),
         .testTarget(
             name: "SweatFeaturesTests",
-            dependencies: ["SweatFeatures"],
+            dependencies: ["SweatFeatures", "SweatPersistence"],
             swiftSettings: [.defaultIsolation(MainActor.self)]
         )
     ]

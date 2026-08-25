@@ -5,7 +5,7 @@ import SweatPersistence
 /// 온보딩 진행 상태.
 ///
 /// 두 가지 방식으로 들어온다.
-/// - **최초 실행** — 1단계부터 3단계까지 순서대로, 끝나면 홈으로
+/// - **최초 실행** — 1단계부터 4단계까지 순서대로, 끝나면 홈으로
 /// - **편집** — 마이페이지에서 특정 단계 하나만, 저장하면 즉시 돌아간다
 @Observable
 public final class OnboardingFlow {
@@ -13,11 +13,12 @@ public final class OnboardingFlow {
     public enum Step: Int, CaseIterable {
         case sensitivity = 0
         case movement
+        case location
         case notification
     }
 
     public enum Mode: Hashable {
-        /// 최초 실행. 3단계를 순서대로 거친다.
+        /// 최초 실행. 4단계를 순서대로 거친다.
         case initial
         /// 마이페이지에서 값 하나를 고치러 들어왔다.
         case editing(Step)
@@ -25,14 +26,22 @@ public final class OnboardingFlow {
 
     public private(set) var profile: UserProfile
     public private(set) var step: Step
+    public private(set) var isRequestingLocation = false
     public let mode: Mode
 
     private let store: ProfileStore
+    private let location: any LocationProviding
     private let onFinish: () -> Void
 
-    public init(store: ProfileStore, mode: Mode = .initial, onFinish: @escaping () -> Void) {
+    public init(
+        store: ProfileStore,
+        mode: Mode = .initial,
+        location: any LocationProviding = SystemLocationProvider(),
+        onFinish: @escaping () -> Void
+    ) {
         self.store = store
         self.mode = mode
+        self.location = location
         self.profile = store.load()
         self.onFinish = onFinish
         self.step = if case .editing(let target) = mode { target } else { .sensitivity }
@@ -64,6 +73,24 @@ public final class OnboardingFlow {
         guard mode == .initial else { return finish() }
         guard let next = Step(rawValue: step.rawValue + 1) else { return finish() }
         step = next
+    }
+
+    /// 안내 CTA를 누른 뒤에만 시스템 위치 권한을 요청한다.
+    ///
+    /// 허용·거부·사용 불가 모두 정상 결과다. 어느 경우든 알림 단계로 진행한다.
+    public func allowLocation() async {
+        guard !isRequestingLocation else { return }
+        isRequestingLocation = true
+        profile.usesCurrentLocation = true
+        _ = await location.currentLocation()
+        isRequestingLocation = false
+        advance()
+    }
+
+    /// 시스템 권한을 묻지 않고 지역 선택 대안을 사용한다.
+    public func skipLocation() {
+        profile.usesCurrentLocation = false
+        advance()
     }
 
     /// 알림을 허용하고 온보딩을 끝낸다.

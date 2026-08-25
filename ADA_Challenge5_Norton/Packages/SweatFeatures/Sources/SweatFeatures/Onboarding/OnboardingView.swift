@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 온보딩 세 단계를 감싼다.
+/// 온보딩 네 단계를 감싼다.
 public struct OnboardingView: View {
     @State private var flow: OnboardingFlow
 
@@ -12,6 +12,7 @@ public struct OnboardingView: View {
         switch flow.step {
         case .sensitivity:  SensitivityStep(flow: flow)
         case .movement:     MovementStep(flow: flow)
+        case .location:     LocationStep(flow: flow)
         case .notification: NotificationStep(flow: flow)
         }
     }

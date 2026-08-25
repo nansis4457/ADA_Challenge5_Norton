@@ -23,7 +23,7 @@
 | 최소 지원 | **iOS 26.5** (프로젝트 설정값) |
 | 언어 | **Swift 6.0**, strict concurrency `complete` |
 | IDE | Xcode 26.x (`objectVersion 77`) |
-| UI | SwiftUI 100%. UIKit 미사용 |
+| UI | SwiftUI 100%. UIKit View 미사용; Core Location 재실행 훅에 App Delegate만 사용 |
 | 디바이스 | iPhone 전용, Portrait 고정 |
 | Bundle ID | `com.spctutorial.app.ADA-Challenge5-Norton` |
 
@@ -52,7 +52,7 @@ Portrait 고정 근거 — 홈의 마스코트·예보 그리드가 402pt 폭 �
 
 | | 이유 |
 |---|---|
-| UIKit / Storyboard | 신규 프로젝트에 섞을 이유 없음 |
+| UIKit View / Storyboard | 신규 화면에 섞을 이유 없음. `UIApplicationDelegateAdaptor`는 Core Location 수명주기 연결에만 사용 |
 | HealthKit | 권한 심사 비용 대비 이번 스코프 이득 없음. 3차 재검토 |
 | CoreMotion | 이동수단 자동 판별 → 온보딩 직접 선택으로 대체 |
 | **Foundation Models** | 이 앱의 문구는 설계표로 확정된 결정적 텍스트다. 생성형으로 바꾸면 QA 대상이 폭증하고 폭염 안전 문구의 일관성이 깨진다 (규칙 「단정하지 않는다」) |
@@ -95,7 +95,9 @@ ADA_Challenge5_Norton/
 │   ├── SweatDomain/        등급·보정·노출 추정
 │   ├── WeatherData/        기상청 클라이언트, WeatherKit 어댑터, 격자 변환
 │   ├── RouteData/          경로 계산, 실내외 세그먼트화
-│   ├── SweatPersistence/   SwiftData 스키마
+│   ├── MoveData/           이동 위치·로컬 알림 경계
+│   ├── MoveActivitySupport/Live Activity 공유 타입·갱신 정책
+│   ├── SweatPersistence/   사용자 설정·활성 이동 최소 상태·SwiftData 스키마
 │   └── SweatFeatures/      화면
 └── ADA_Challenge5_Norton/  앱 타깃 (얇게 유지)
 ```
@@ -353,7 +355,8 @@ struct MoveActivityAttributes: ActivityAttributes {
 
 **업데이트 예산** — 위치 콜백마다 갱신하지 말고 **최소 30초 간격 또는 진행률 5% 변화 시**로 스로틀. 예산 초과 시 정적 표시로 강등.
 
-`Info.plist` — `NSLocationWhenInUseUsageDescription`, `UIBackgroundModes: location, processing`, `NSSupportsLiveActivities: YES`
+`Info.plist` — `NSLocationWhenInUseUsageDescription`, `UIBackgroundModes: location`, `NSSupportsLiveActivities: YES`.
+이 이동 기능은 `BGProcessingTask`를 사용하지 않으므로 `processing` 모드는 켜지 않는다.
 
 ---
 
@@ -385,6 +388,8 @@ struct UserProfile: Codable, Sendable {
     var sensitivity: Sensitivity
     var transport: Transport
     var outdoorDuration: OutdoorDuration
+    var usesCurrentLocation: Bool
+    var wantsNotification: Bool
     var calibrationOffset: Double
     var humidityBoost: Double
     var notificationHour: Int
@@ -443,7 +448,7 @@ func updateCalibration(logs: [SweatLog], profile: UserProfile) {
 | 키 | 문구 방향 |
 |---|---|
 | `NSLocationWhenInUseUsageDescription` | 현재 위치의 관측값과 이동 경로의 그늘·실내 구간을 계산하는 데 사용합니다 |
-| `UIBackgroundModes` | `location`, `processing` |
+| `UIBackgroundModes` | `location` |
 | `NSSupportsLiveActivities` | `YES` |
 
 - 위치·기록은 **기기에만 저장.** 서버 전송 없음

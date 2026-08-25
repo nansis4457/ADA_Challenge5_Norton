@@ -48,6 +48,8 @@ public enum HomeCopy {
     // MARK: 위치 권한
 
     public enum Location {
+        public static let deferredTitle = "현재 위치 사용을 미뤘어요"
+        public static let deferredBody = "지역을 직접 고르면 시스템 권한 없이도 날씨를 볼 수 있어요."
         public static let deniedTitle = "위치를 알 수 없어요"
         public static let deniedBody = "지역을 직접 고르면 그 지역 날씨로 알려드릴게요."
         public static let unavailableTitle = "위치를 가져오지 못했어요"
@@ -134,6 +136,7 @@ public enum HomeCopy {
                       Forecast.estimatedNote,
                       Forecast.dayLabel("금", .sweaty, low: 26, high: 33),
                       mascotLabel(stage: 3, state: "땀 불편 높음", headline: "오늘은 땀이 많이 날 수 있어요"),
+                      Location.deferredTitle, Location.deferredBody,
                       Location.deniedTitle, Location.deniedBody,
                       Location.unavailableTitle, Location.unavailableBody, Location.choosePrompt,
                       Location.current,

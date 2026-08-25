@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct ADA_Challenge5_NortonApp: App {
+    @UIApplicationDelegateAdaptor(MoveApplicationDelegate.self) private var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()

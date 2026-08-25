@@ -84,6 +84,10 @@ public final class HomeStore {
         let coordinate: Coordinate
         if let region {
             coordinate = region.coordinate
+        } else if !profile().usesCurrentLocation {
+            // 온보딩에서 `나중에`를 골랐다. 시스템 창을 다시 띄우지 않는다.
+            phase = .needsRegion(reason: .deferred)
+            return
         } else {
             switch await location.currentLocation() {
             case .located(let value):
@@ -98,6 +102,9 @@ public final class HomeStore {
                 return
             case .unavailable:
                 phase = .needsRegion(reason: .unavailable)
+                return
+            case .deferred:
+                phase = .needsRegion(reason: .deferred)
                 return
             }
         }

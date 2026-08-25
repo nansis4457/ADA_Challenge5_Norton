@@ -15,6 +15,8 @@ public struct UserProfile: Codable, Sendable, Equatable {
     public var sensitivity: Sensitivity
     public var transport: Transport
     public var outdoorDuration: OutdoorDuration
+    /// `false`면 홈에서 시스템 위치 권한을 요청하지 않고 지역 선택을 보여준다.
+    public var usesCurrentLocation: Bool
     public var wantsNotification: Bool
     public var hasCompletedOnboarding: Bool
 
@@ -35,6 +37,7 @@ public struct UserProfile: Codable, Sendable, Equatable {
         sensitivity: .normal,
         transport: .subway,
         outdoorDuration: .twentyToForty,
+        usesCurrentLocation: true,
         wantsNotification: false,
         hasCompletedOnboarding: false,
         calibrationOffset: 0,
@@ -46,6 +49,7 @@ public struct UserProfile: Codable, Sendable, Equatable {
         sensitivity: Sensitivity,
         transport: Transport,
         outdoorDuration: OutdoorDuration,
+        usesCurrentLocation: Bool,
         wantsNotification: Bool,
         hasCompletedOnboarding: Bool,
         calibrationOffset: Double,
@@ -55,6 +59,7 @@ public struct UserProfile: Codable, Sendable, Equatable {
         self.sensitivity = sensitivity
         self.transport = transport
         self.outdoorDuration = outdoorDuration
+        self.usesCurrentLocation = usesCurrentLocation
         self.wantsNotification = wantsNotification
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.calibrationOffset = calibrationOffset
@@ -69,6 +74,7 @@ public struct UserProfile: Codable, Sendable, Equatable {
         sensitivity = try c.decodeIfPresent(Sensitivity.self, forKey: .sensitivity) ?? d.sensitivity
         transport = try c.decodeIfPresent(Transport.self, forKey: .transport) ?? d.transport
         outdoorDuration = try c.decodeIfPresent(OutdoorDuration.self, forKey: .outdoorDuration) ?? d.outdoorDuration
+        usesCurrentLocation = try c.decodeIfPresent(Bool.self, forKey: .usesCurrentLocation) ?? d.usesCurrentLocation
         wantsNotification = try c.decodeIfPresent(Bool.self, forKey: .wantsNotification) ?? d.wantsNotification
         hasCompletedOnboarding = try c.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? d.hasCompletedOnboarding
         calibrationOffset = try c.decodeIfPresent(Double.self, forKey: .calibrationOffset) ?? d.calibrationOffset

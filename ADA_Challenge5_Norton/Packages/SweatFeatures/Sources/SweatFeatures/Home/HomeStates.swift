@@ -32,10 +32,18 @@ struct RegionPicker: View {
     }
 
     private var title: String {
-        reason == .denied ? HomeCopy.Location.deniedTitle : HomeCopy.Location.unavailableTitle
+        switch reason {
+        case .deferred: HomeCopy.Location.deferredTitle
+        case .denied: HomeCopy.Location.deniedTitle
+        case .located, .unavailable: HomeCopy.Location.unavailableTitle
+        }
     }
     private var body_: String {
-        reason == .denied ? HomeCopy.Location.deniedBody : HomeCopy.Location.unavailableBody
+        switch reason {
+        case .deferred: HomeCopy.Location.deferredBody
+        case .denied: HomeCopy.Location.deniedBody
+        case .located, .unavailable: HomeCopy.Location.unavailableBody
+        }
     }
 }
 

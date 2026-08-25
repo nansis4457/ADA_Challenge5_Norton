@@ -1,9 +1,9 @@
 import SwiftUI
 import DesignSystem
 
-/// 온보딩 세 화면이 공유하는 뼈대.
+/// 온보딩 네 화면이 공유하는 뼈대.
 ///
-/// 뒤로가기·단계 표시·제목·설명은 세 화면이 똑같다. 다른 건 가운데 내용과 CTA뿐이다.
+/// 뒤로가기·단계 표시·제목·설명은 네 화면이 똑같다. 다른 건 가운데 내용과 CTA뿐이다.
 struct OnboardingStepScaffold<Content: View, Actions: View>: View {
 
     let step: String
