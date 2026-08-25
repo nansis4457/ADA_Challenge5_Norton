@@ -34,12 +34,37 @@ struct HourlyForecastSection: View {
     private var horizontalGrid: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
-                ForEach(visible, id: \.date) { hour in
-                    cell(hour)
+                hourlyRowLabels
+                ForEach(Array(visible.enumerated()), id: \.element.date) { index, hour in
+                    cell(hour, isCurrent: index == 0)
                 }
             }
-            .padding(.horizontal, Space.gutter)
+            .padding(.leading, Space.gutter)
+            .padding(.trailing, Space.gutter)
         }
+    }
+
+    /// 각 값의 의미를 스크롤하기 전에 읽을 수 있는 고정 폭 행 제목.
+    ///
+    /// 높이는 시간 칸의 네 행과 맞춰 `땀 단계`·`기온`·`습도`가 같은 기준선에 놓인다.
+    private var hourlyRowLabels: some View {
+        VStack(spacing: 6) {
+            Color.clear.frame(height: 20)
+            hourlyRowLabel(HomeCopy.Forecast.stageColumn, height: 34)
+            hourlyRowLabel(HomeCopy.Forecast.temperatureColumn, height: 20)
+            hourlyRowLabel(HomeCopy.Forecast.humidityColumn, height: 18)
+        }
+        .frame(width: 52)
+        .padding(.vertical, 6)
+        .accessibilityHidden(true)
+    }
+
+    private func hourlyRowLabel(_ value: String, height: CGFloat) -> some View {
+        Text(value)
+            .sweatType(.overline11)
+            .foregroundStyle(Ink.n600)
+            .frame(maxWidth: .infinity, minHeight: height, maxHeight: height,
+                   alignment: .leading)
     }
 
     /// 접근성 크기에서는 한 줄에 하나씩.
@@ -60,15 +85,26 @@ struct HourlyForecastSection: View {
         .padding(.horizontal, Space.gutter)
     }
 
-    private func cell(_ hour: HourlyForecast) -> some View {
-        VStack(spacing: Space.x1) {
-            Text(time(hour.date)).sweatType(.list125).foregroundStyle(Ink.n600)
+    private func cell(_ hour: HourlyForecast, isCurrent: Bool) -> some View {
+        VStack(spacing: 6) {
+            Text(time(hour.date))
+                .sweatType(.list125)
+                .foregroundStyle(Ink.n600)
+                .frame(height: 20)
             WeatherFace(level: level(hour).rawValue)
-            Text(temperature(hour)).sweatType(.forecast16).foregroundStyle(Ink.n900)
-            Text("\(Int(hour.relativeHumidity))%").sweatType(.caption13).foregroundStyle(Ink.n600)
+            Text(temperature(hour))
+                .sweatType(.forecast16)
+                .foregroundStyle(Ink.n900)
+                .frame(height: 20)
+            Text("\(Int(hour.relativeHumidity))%")
+                .sweatType(.caption13)
+                .foregroundStyle(Ink.n600)
+                .frame(height: 18)
         }
         .frame(width: 62)
-        .padding(.vertical, Space.x1)
+        .padding(.vertical, 6)
+        .background(isCurrent ? Surface.accentWash : Color.clear,
+                    in: RoundedRectangle(cornerRadius: Radius.lg))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(time(hour.date)), \(HomeCopy.Forecast.levelName(level(hour))), \(temperature(hour))")
     }
@@ -100,10 +136,14 @@ struct WeeklyForecastSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Space.x3) {
+        VStack(alignment: .leading, spacing: 0) {
             Text(HomeCopy.Forecast.weekly)
                 .sweatType(.section15)
                 .foregroundStyle(Ink.n900)
+                .padding(.bottom, Space.x2)
+
+            columnLabels
+                .padding(.bottom, 6)
 
             VStack(spacing: 2) {
                 ForEach(visible, id: \.date) { day in row(day) }
@@ -114,6 +154,7 @@ struct WeeklyForecastSection: View {
                 Text(HomeCopy.Forecast.estimatedNote)
                     .sweatType(.caption12)
                     .foregroundStyle(Ink.n400)
+                    .padding(.top, Space.x3)
             }
         }
         .padding(.horizontal, Space.gutter)
@@ -124,12 +165,39 @@ struct WeeklyForecastSection: View {
         }
     }
 
+    /// 주간 행의 각 수치가 무엇을 뜻하는지 설명한다.
+    private var columnLabels: some View {
+        HStack(spacing: 10) {
+            columnLabel(HomeCopy.Forecast.dateColumn)
+                .frame(width: 34, alignment: .leading)
+            columnLabel(HomeCopy.Forecast.stageColumn)
+                .frame(width: 88, alignment: .leading)
+            columnLabel(HomeCopy.Forecast.temperatureRangeColumn)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack(spacing: 0) {
+                columnLabel(HomeCopy.Forecast.lowColumn)
+                Spacer(minLength: 0)
+                columnLabel(HomeCopy.Forecast.highColumn)
+            }
+            .frame(width: 64)
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func columnLabel(_ value: String) -> some View {
+        Text(value)
+            .sweatType(.overline11)
+            .foregroundStyle(Ink.n400)
+    }
+
     private func row(_ day: DailyForecast) -> some View {
         let stage = profile.stage(forApparent: day.apparentHigh)
         let level = ForecastLevel(stage)
+        let isToday = Calendar.current.isDateInToday(day.date)
         return HStack(spacing: Space.x2 + 2) {
             Text(weekday(day.date)).sweatType(.label14Medium)
-                .foregroundStyle(Ink.n600).frame(width: 34, alignment: .leading)
+                .foregroundStyle(isToday ? Ink.n900 : Ink.n600)
+                .frame(width: 34, alignment: .leading)
             WeatherFace(level: level.rawValue, size: 22)
             Text(HomeCopy.Forecast.levelName(level))
                 .sweatType(.list125)
@@ -137,11 +205,25 @@ struct WeeklyForecastSection: View {
                 .frame(width: 56, alignment: .leading)
             RangeBar(range: day.lowTemperature...day.highTemperature, bounds: bounds,
                      color: StageRole.outline(stage.rawValue))
-            Text("\(Int(day.lowTemperature))° \(Int(day.highTemperature))°")
-                .sweatType(.caption13).foregroundStyle(Ink.n600)
-                .frame(width: 64, alignment: .trailing)
+            HStack(spacing: 5) {
+                Text("\(Int(day.lowTemperature))°")
+                    .sweatType(.caption13)
+                    .foregroundStyle(Ink.n400)
+                Text("\(Int(day.highTemperature))°")
+                    .sweatType(.caption13)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Ink.n900)
+            }
+            .frame(width: 64, alignment: .trailing)
         }
         .padding(.vertical, 7)
+        .background {
+            if isToday {
+                RoundedRectangle(cornerRadius: Radius.lg)
+                    .fill(Surface.accentWash)
+                    .padding(.horizontal, -6)
+            }
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(HomeCopy.Forecast.dayLabel(weekday(day.date), level,
                                                        low: Int(day.lowTemperature),
