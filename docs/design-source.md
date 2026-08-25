@@ -25,7 +25,7 @@
 | `01 온보딩 · 땀 민감도` | 402×874 | `SensitivityStepView` | 001 |
 | `02 온보딩 · 이동 패턴` | 402×874 | `TransportStepView` | 001 |
 | `03 온보딩 · 알림 권한` | 402×874 | `NotificationStepView` | 001 |
-| `04 홈 · 땀 등급 (스크롤)` | 402×1339 | `HomeView` | 002 |
+| `04 홈 · 땀 등급 (스크롤)` | 402×1364 | `HomeView` | 002 |
 | `05 등급 상세` | 402×874 | `StageDetailView` | 002 |
 | `06 지도` | 402×874 | `MapHomeView` | 003 |
 | `07 경로 입력` | 402×874 | `RouteInputView` | 003 |
@@ -61,6 +61,7 @@
 | `Forecast Day Row` | — | `ForecastDayRow(range:)` |
 | `List Row` | Menu / Setting | `SettingsRow(style:)` |
 | `Location Header` | — | `LocationHeader` |
+| `Weather Attribution` | — | `AttributionBlock` |
 | `Search FAB` | — | `SearchFAB` |
 | `iOS / Status Bar`, `iOS / Home Indicator` | — | 구현하지 않음 (OS 제공) |
 
@@ -110,3 +111,6 @@ Figma 인스턴스는 하위 레이어 크기를 변경할 수 없다.
 `FactorBar(ratio: 0.486)`, `ForecastDayRow(range: 26.8...35.8, bounds: 24.6...36.4)`
 
 `06 지도`, `08 실내외 비율`의 지도는 양식화된 플레이스홀더다. 실제 지도가 아니다.
+
+`04 홈`은 프레임이 둘이다 — 라인업의 874pt 크롭과 그 아래의 풀 스크롤(1364pt) 프레임.
+**표의 크기는 풀 스크롤 쪽이다.** 화면 전체를 볼 때는 그쪽을 본다.

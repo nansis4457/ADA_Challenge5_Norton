@@ -66,6 +66,18 @@ Text("오늘은 땀이 많이 날 수 있어요")
 | `stage/6-body` | `#FF458E` | `StageColor.body(6)` |
 | `stage/6-top` | `#D82071` | `StageColor.top(6)` |
 
+### 단계 색은 자리마다 다르다
+
+`StageColor`는 큰 면을 채우는 색이라 밝다. 텍스트나 테두리에 그대로 쓰면 배경에 묻힌다.
+
+| 역할 | Swift | 기준 | 쓰는 곳 |
+|---|---|---|---|
+| 채움 | `StageColor.body(n)` / `.top(n)` | — | 마스코트 몸통, 예보 표정 원 |
+| 테두리 | `StageRole.outline(n)` | 3:1 | 마스코트·표정 윤곽, 범위 막대 |
+| 텍스트 | `StageRole.ink(n)` | 4.5:1 | 단계 라벨 |
+
+근거와 대비 수치는 `docs/color-accessibility.md`.
+
 ### 이름이 다른 것
 
 | Figma | Swift | 이유 |

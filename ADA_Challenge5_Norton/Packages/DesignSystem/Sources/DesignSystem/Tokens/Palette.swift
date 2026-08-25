@@ -106,3 +106,35 @@ public enum StageColor {
     }
 
 }
+
+// MARK: - 단계 색의 역할
+
+/// 단계 색은 자리마다 다른 것을 써야 한다.
+///
+/// `StageColor`는 **큰 면을 채우는 색**이라 밝다. 그대로 텍스트에 쓰면 배경에 묻힌다
+/// (1단계 라벨은 대비 1.09:1이었다). 역할을 나눠 각각 기준을 맞춘다.
+///
+/// 자세한 근거와 대비 수치는 `docs/color-accessibility.md`.
+public enum StageRole {
+
+    /// 도형 테두리와 막대. WCAG 그래픽 요소 기준 3:1 이상.
+    ///
+    /// 마스코트와 예보 표정은 이 색으로 윤곽을 그려야 배경에서 떨어져 보인다.
+    public static func outline(_ stage: Int) -> Color {
+        switch min(max(stage, 1), 6) {
+        case 1, 2: Accent.base      // 3.65:1
+        case 3, 4: Magenta.base     // 4.61:1
+        default:   Magenta.deep     // 6.50:1
+        }
+    }
+
+    /// 단계를 나타내는 텍스트. WCAG 본문 기준 4.5:1 이상.
+    public static func ink(_ stage: Int) -> Color {
+        switch min(max(stage, 1), 6) {
+        case 1:    Ink.n600         // 5.83:1 — 걱정할 게 없는 상태는 색으로 주의를 끌지 않는다
+        case 2:    Accent.deep      // 5.72:1
+        case 3, 4: Magenta.base     // 4.61:1
+        default:   Magenta.deep     // 6.50:1
+        }
+    }
+}
