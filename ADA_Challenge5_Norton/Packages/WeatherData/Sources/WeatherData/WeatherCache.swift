@@ -70,7 +70,19 @@ public actor WeatherCache {
     }
 
     private func fileURL(for key: String) -> URL? {
-        // 좌표가 키라서 파일명에 못 쓰는 문자가 섞인다. 해시로 바꾼다.
-        directory?.appending(path: "\(key.hashValue).json")
+        directory?.appending(path: Self.fileName(for: key))
+    }
+
+    /// 키를 파일명으로 바꾼다.
+    ///
+    /// **`hashValue`를 쓰면 안 된다.** Swift의 문자열 해시는 프로세스마다 다른 씨앗을
+    /// 쓴다. 그래서 앱을 껐다 켜면 같은 좌표가 다른 파일을 가리키고, 디스크 캐시는
+    /// 한 번도 재사용되지 않은 채 파일만 쌓인다. 실제로 그랬다 — 같은 자리에서 세 번
+    /// 실행하니 파일이 세 개 생겼다.
+    ///
+    /// 좌표 키(`"37.500,127.000"`)에는 파일명에 쓰기 곤란한 문자가 섞이므로
+    /// 글자와 숫자만 남기고 나머지는 `_`로 바꾼다. 값이 그대로 보여 디버깅에도 낫다.
+    static func fileName(for key: String) -> String {
+        String(key.map { $0.isLetter || $0.isNumber ? $0 : "_" }) + ".json"
     }
 }

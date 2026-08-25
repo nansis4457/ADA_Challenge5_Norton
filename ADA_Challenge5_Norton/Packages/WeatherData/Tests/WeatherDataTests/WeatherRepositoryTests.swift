@@ -251,6 +251,15 @@ struct WeatherCacheTests {
         #expect(await reopened.value(for: "key") == value)
     }
 
+    @Test("파일명이 실행마다 달라지지 않는다")
+    func fileNameIsStable() {
+        // 위의 `survivesNewInstance`는 이 버그를 못 잡았다. 한 프로세스 안에서는
+        // `hashValue`도 매번 같은 값을 주기 때문이다. 시뮬레이터에서 같은 자리로
+        // 세 번 실행하니 캐시 파일이 세 개 생겨서 드러났다.
+        #expect(WeatherCache.fileName(for: "37.500,127.000") == "37_500_127_000.json")
+        #expect(WeatherCache.fileName(for: "-33.900,151.200") == "_33_900_151_200.json")
+    }
+
     @Test("경과 시간이 음수가 되지 않는다")
     func ageNeverNegative() {
         let future = entry(fetchedAt: Date().addingTimeInterval(600))
