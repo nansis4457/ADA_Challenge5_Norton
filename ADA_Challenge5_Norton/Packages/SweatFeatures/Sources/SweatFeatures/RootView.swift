@@ -17,22 +17,11 @@ public struct RootView: View {
     /// 홈과 상세가 같은 저장소를 봐야 두 화면의 단계가 어긋나지 않는다.
     @State private var home: HomeStore?
 
-    /// 상세로 넘길 값.
-    ///
-    /// 화면 전환 시점에 값을 **들고 간다.** 목적지에서 옵셔널을 꺼내 쓰면
-    /// 아직 준비되지 않았을 때 빈 화면이 나온다.
-    private struct DetailPayload: Identifiable, Hashable {
-        let observation: WeatherObservation
-        let stage: SweatStage
-        var id: Date { observation.observedAt }
-    }
-
     private let store: ProfileStore
     private let weather: WeatherRepository
     private let location: any LocationProviding
     @State private var screen: Screen
     @State private var profile: UserProfile
-    @State private var detail: DetailPayload?
 
     public init(
         store: ProfileStore = ProfileStore(),
@@ -59,26 +48,7 @@ public struct RootView: View {
 
         case .home:
             let store = home ?? HomeStore(repository: weather, location: location) { profile }
-            NavigationStack {
-                HomeView(store: store, onOpenDetail: {
-                    // 값이 있을 때만 넘어간다. 없으면 아무 일도 하지 않는다.
-                    guard let observation = store.observation, let stage = store.stage else { return }
-                    detail = DetailPayload(observation: observation, stage: stage)
-                })
-                .navigationDestination(item: $detail) { payload in
-                    StageDetailView(
-                        observation: payload.observation,
-                        stage: payload.stage,
-                        attribution: store.attribution
-                    ) {
-                        detail = nil
-                    }
-                    // 화면이 자체 뒤로가기를 갖고 있어 시스템 바를 숨긴다.
-                    #if os(iOS)
-                    .toolbar(.hidden, for: .navigationBar)
-                    #endif
-                }
-            }
+            MainTabView(home: store)
             .onAppear { if home == nil { home = store } }
         }
     }
