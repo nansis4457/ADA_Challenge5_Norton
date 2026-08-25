@@ -12,4 +12,11 @@ public struct Coordinate: Sendable, Codable, Equatable, Hashable {
         self.latitude = latitude
         self.longitude = longitude
     }
+
+    /// 지구 표면의 유효한 위·경도인가.
+    public var isValid: Bool {
+        latitude.isFinite && longitude.isFinite
+            && (-90 ... 90).contains(latitude)
+            && (-180 ... 180).contains(longitude)
+    }
 }
