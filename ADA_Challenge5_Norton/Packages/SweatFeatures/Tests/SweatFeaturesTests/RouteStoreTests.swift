@@ -14,6 +14,34 @@ struct RouteStoreTests {
         #expect(!store.canCalculate)
     }
 
+    @Test("현재 위치를 기본 출발지로 확정한다")
+    func selectsCurrentLocationAsOrigin() async {
+        let coordinate = Coordinate(latitude: 36.0, longitude: 129.0)
+        let store = makeStore(
+            location: FixedLocation(outcome: .located(coordinate)),
+            automaticallyUsesCurrentLocation: true
+        )
+
+        await store.prepareCurrentLocationIfNeeded()
+
+        #expect(store.selectedOriginName == RouteCopy.currentLocationName)
+        #expect(store.originQuery == RouteCopy.currentLocationName)
+    }
+
+    @Test("위치가 거부되면 직접 검색 상태를 유지한다")
+    func keepsManualSearchWhenLocationIsDenied() async {
+        let store = makeStore(
+            location: FixedLocation(outcome: .denied),
+            automaticallyUsesCurrentLocation: true
+        )
+
+        await store.prepareCurrentLocationIfNeeded()
+
+        #expect(store.locationOutcome == .denied)
+        #expect(store.selectedOriginName == nil)
+        #expect(!store.canCalculate)
+    }
+
     @Test("장소를 확정한 뒤 도보 경로를 계산한다")
     func calculatesWalkingRoute() async throws {
         let search = FakePlaceSearch()
@@ -127,6 +155,8 @@ struct RouteStoreTests {
         search: any PlaceSearching = FakePlaceSearch(),
         source: FakeRouteSource? = nil,
         analyzer: any ExposureAnalyzing = NoCoverageExposureAnalyzer(),
+        location: any LocationProviding = FixedLocation(outcome: .deferred),
+        automaticallyUsesCurrentLocation: Bool = false,
         searchDelay: Duration = .zero,
         stage: @escaping () -> SweatStage = { .three }
     ) -> RouteStore {
@@ -134,6 +164,8 @@ struct RouteStoreTests {
             placeSearch: search,
             routeSource: source ?? FakeRouteSource(result: .success([makeRoute()])),
             exposureAnalyzer: analyzer,
+            location: location,
+            automaticallyUsesCurrentLocation: automaticallyUsesCurrentLocation,
             searchDelay: searchDelay,
             stage: stage
         )
@@ -168,6 +200,12 @@ struct RouteStoreTests {
             path: [origin.coordinate, destination.coordinate]
         )!
     }
+}
+
+private struct FixedLocation: LocationProviding {
+    let outcome: LocationOutcome
+
+    func currentLocation() async -> LocationOutcome { outcome }
 }
 
 @MainActor

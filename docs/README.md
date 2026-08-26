@@ -13,6 +13,7 @@
 | 3 | [`design-source.md`](design-source.md) | UI를 만들 때. Figma ↔ 코드 매핑 |
 | 4 | [`git-workflow.md`](git-workflow.md) | 커밋·PR 전 |
 | 5 | [`specs/README.md`](specs/README.md) | 다음에 뭘 만들지 정할 때 |
+| 6 | [`release-readiness.md`](release-readiness.md) | TestFlight 배포 전 |
 
 도메인 원본은 저장소 루트의 `땀_날씨앱_구간화_UI_멘트_개발가이드.md`.
 구간 정의와 UX Writing 원칙의 출처이며, 규칙 「단정하지 않는다」·IV·V가 여기서 나왔다.
@@ -52,6 +53,7 @@ docs/
 ├── architecture.md        기술 설계
 ├── design-source.md       Figma 매핑
 ├── git-workflow.md        커밋 · PR 규칙
+├── release-readiness.md   접근성 · TestFlight 체크리스트
 ├── templates/             spec · tasks 템플릿
 └── specs/
     ├── README.md          로드맵
@@ -66,6 +68,6 @@ docs/
 
 | | |
 |---|---|
-| 진행 중 | `004-move` 기본 이동 추적 · Live Activity · 재실행 복원 구현 완료 |
-| 다음 | 실기기 권한·백그라운드·잠금 화면·배터리 검증 후 PR |
+| 진행 중 | `004-move` 기본 이동 추적 · Live Activity · 재실행 복원 구현, `005-profile-log` 연결 완료 |
+| 다음 | 004 실기기 권한·백그라운드·잠금 화면·배터리 검증 후 PR |
 | 블로커 | 실내·그늘·공식 무더위쉼터 실데이터 미연결 — 기본 진행 추적은 가능하며 해당 추천만 숨김 |

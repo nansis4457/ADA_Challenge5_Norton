@@ -32,7 +32,7 @@ struct MapHomeView: View {
                     Image(systemName: "magnifyingglass")
                         .imageScale(.large)
                         .foregroundStyle(Accent.base)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 44, height: 44)
                         .background(Surface.card, in: Circle())
                         .shadow(color: Ink.n900.opacity(0.18), radius: 3, y: 1)
                 }

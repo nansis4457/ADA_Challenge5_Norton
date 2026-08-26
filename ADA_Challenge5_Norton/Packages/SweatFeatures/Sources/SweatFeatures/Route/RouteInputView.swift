@@ -25,7 +25,13 @@ struct RouteInputView: View {
                 .onChange(of: store.originQuery) { _, _ in store.queryDidChange(.origin) }
                 .onChange(of: store.destinationQuery) { _, _ in store.queryDidChange(.destination) }
 
+                currentLocationButton
+                    .padding(.top, Space.x2)
+
                 searchFeedback
+
+                selectionStatus
+                    .padding(.top, Space.x2)
 
                 departurePicker
                     .padding(.top, Space.x5)
@@ -63,6 +69,7 @@ struct RouteInputView: View {
         }
         .background(Surface.page)
         .navigationBarBackButtonHidden(true)
+        .task { await store.prepareCurrentLocationIfNeeded() }
     }
 
     private var backButton: some View {
@@ -73,6 +80,8 @@ struct RouteInputView: View {
                     .sweatType(.body14)
             }
             .foregroundStyle(Accent.deep)
+            .frame(minHeight: 44)
+            .contentShape(.rect)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(RouteCopy.backToMap)
@@ -80,7 +89,13 @@ struct RouteInputView: View {
 
     @ViewBuilder
     private var searchFeedback: some View {
-        if store.activity == .searching || store.activity == .resolving {
+        if store.activity == .locating {
+            ProgressView(RouteCopy.locatingCurrentLocation)
+                .sweatType(.caption13)
+                .foregroundStyle(Ink.n600)
+                .frame(maxWidth: .infinity)
+                .padding(.top, Space.x3)
+        } else if store.activity == .searching || store.activity == .resolving {
             ProgressView(RouteCopy.searching)
                 .sweatType(.caption13)
                 .foregroundStyle(Ink.n600)
@@ -97,6 +112,54 @@ struct RouteInputView: View {
                 .sweatType(.caption13)
                 .foregroundStyle(Ink.n600)
                 .padding(.top, Space.x3)
+        }
+    }
+
+    private var currentLocationButton: some View {
+        Button {
+            Task { await store.useCurrentLocation() }
+        } label: {
+            Label(RouteCopy.currentLocationAction, systemImage: "location.fill")
+                .sweatType(.bodyStrong15)
+                .foregroundStyle(Accent.deep)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .disabled(store.activity == .locating)
+    }
+
+    private var selectionStatus: some View {
+        VStack(alignment: .leading, spacing: Space.x1) {
+            selectionStatusRow(
+                RouteCopy.selectionStatus(field: RouteCopy.origin, place: store.selectedOriginName),
+                isSelected: store.selectedOriginName != nil
+            )
+            selectionStatusRow(
+                RouteCopy.selectionStatus(field: RouteCopy.destination, place: store.selectedDestinationName),
+                isSelected: store.selectedDestinationName != nil
+            )
+            if let locationMessage {
+                Text(locationMessage)
+                    .sweatType(.caption13)
+                    .foregroundStyle(Magenta.deep)
+            }
+        }
+    }
+
+    private func selectionStatusRow(_ text: String, isSelected: Bool) -> some View {
+        Label(text, systemImage: isSelected ? "checkmark.circle.fill" : "circle")
+            .sweatType(.caption13)
+            .foregroundStyle(isSelected ? Accent.deep : Ink.n600)
+            .accessibilityLabel(text)
+    }
+
+    private var locationMessage: String? {
+        switch store.locationOutcome {
+        case .denied: RouteCopy.currentLocationDenied
+        case .unavailable: RouteCopy.currentLocationUnavailable
+        case .deferred: RouteCopy.currentLocationUnavailable
+        case .located, .none: nil
         }
     }
 
@@ -166,6 +229,8 @@ struct RouteInputView: View {
                 Button(RouteCopy.retry) { store.retrySearch() }
                     .sweatType(.bodyStrong15)
                     .foregroundStyle(Accent.deep)
+                    .frame(minHeight: 44, alignment: .leading)
+                    .contentShape(.rect)
             } else if issue == .routeFailed {
                 Button(RouteCopy.retry) {
                     Task {
@@ -174,6 +239,8 @@ struct RouteInputView: View {
                 }
                 .sweatType(.bodyStrong15)
                 .foregroundStyle(Accent.deep)
+                .frame(minHeight: 44, alignment: .leading)
+                .contentShape(.rect)
             }
         }
     }

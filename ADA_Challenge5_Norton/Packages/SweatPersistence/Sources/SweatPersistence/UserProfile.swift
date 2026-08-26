@@ -24,7 +24,10 @@ public struct UserProfile: Codable, Sendable, Equatable {
 
     /// 자가 기록으로 학습된 개인 보정 (℃).
     public var calibrationOffset: Double
-    /// 고습도 구간 추가 보정.
+    /// 이전 설계와 저장 호환성을 위해 남겨둔 값. 현재 단계 계산에는 사용하지 않는다.
+    ///
+    /// 005부터 고습도는 `CalibrationEngine`의 과거 표본 필터로만 쓰고,
+    /// 학습 결과는 `calibrationOffset` 하나에 반영한다.
     public var humidityBoost: Double
 
     /// 아침 알림 시각 (0~23시).

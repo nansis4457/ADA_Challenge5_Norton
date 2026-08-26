@@ -2,29 +2,53 @@ import SwiftUI
 import SweatDomain
 
 struct RouteFlowView: View {
+    private struct MoveDestination: Hashable {
+        let id: UUID
+        let store: MoveStore
+
+        init(store: MoveStore) {
+            self.id = store.session.id
+            self.store = store
+        }
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+    }
+
     private enum Destination: Hashable {
         case input
         case result
-        case move
+        case move(MoveDestination)
     }
 
     @State private var store: RouteStore
     @State private var path: [Destination] = []
-    @State private var moveStore: MoveStore?
-    @State private var showsFinished = false
     private let moveRuntime: MoveBackgroundRuntime
+    private let onMoveCompleted: (MoveCompletion) -> Void
 
     init(
         stage: @escaping () -> SweatStage,
+        location: any LocationProviding = SystemLocationProvider(),
+        automaticallyUsesCurrentLocation: Bool = true,
         moveRuntime: MoveBackgroundRuntime = .shared,
+        onMoveCompleted: @escaping (MoveCompletion) -> Void,
         now: Date = Date()
     ) {
         self.moveRuntime = moveRuntime
-        _store = State(initialValue: RouteStore(stage: stage))
+        self.onMoveCompleted = onMoveCompleted
+        _store = State(initialValue: RouteStore(
+            location: location,
+            automaticallyUsesCurrentLocation: automaticallyUsesCurrentLocation,
+            stage: stage
+        ))
         moveRuntime.resumeIfNeeded(now: now)
         if let restoredStore = moveRuntime.activeStore {
-            _path = State(initialValue: [.move])
-            _moveStore = State(initialValue: restoredStore)
+            _path = State(initialValue: [.move(MoveDestination(store: restoredStore))])
         }
     }
 
@@ -41,28 +65,20 @@ struct RouteFlowView: View {
                     }
                 case .result:
                     RouteResultView(store: store) { route in
-                        moveStore = moveRuntime.begin(route: route)
-                        path.append(.move)
+                        let moveStore = moveRuntime.begin(route: route)
+                        path.append(.move(MoveDestination(store: moveStore)))
                     }
-                case .move:
-                    if let moveStore {
-                        MoveView(store: moveStore) { _ in
-                            showsFinished = true
-                            path = []
-                            self.moveStore = nil
-                            moveRuntime.releaseFinishedMove()
-                        }
+                case .move(let destination):
+                    MoveView(store: destination.store) { completion in
+                        path = []
+                        moveRuntime.releaseFinishedMove()
+                        onMoveCompleted(completion)
                     }
                 }
             }
             #if os(iOS)
             .toolbar(.hidden, for: .navigationBar)
             #endif
-        }
-        .alert(MoveCopy.finishedTitle, isPresented: $showsFinished) {
-            Button(MoveCopy.confirm, role: .cancel) {}
-        } message: {
-            Text(MoveCopy.finishedBody)
         }
     }
 }

@@ -19,9 +19,6 @@ enum MoveCopy {
     static let locationDenied = "위치 권한이 없어 자동으로 진행 상황을 계산할 수 없어요."
     static let locationFailed = "위치 정보를 이어서 받지 못했어요. 이동을 종료하거나 잠시 뒤 다시 확인해보세요."
     static let activityUnavailable = "잠금 화면 표시는 사용할 수 없지만 앱에서 이동을 계속 확인할 수 있어요."
-    static let finishedTitle = "이동을 마쳤어요"
-    static let finishedBody = "오늘 기록 화면은 다음 기능에서 연결돼요."
-    static let confirm = "확인"
 
     static func progressLine(_ progress: MoveProgress) -> String {
         "\(elapsedMinutes(progress.elapsedTime))분 경과 · 남은 거리 \(distance(progress.remainingDistanceMeters))"
