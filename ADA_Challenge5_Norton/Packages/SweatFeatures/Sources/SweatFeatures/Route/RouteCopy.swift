@@ -3,6 +3,8 @@ import Foundation
 enum RouteCopy {
     static let mapTitle = "지도"
     static let searchAction = "경로 검색"
+    static let mapUnavailableTitle = "지도를 불러오지 못했어요"
+    static let mapUnavailableBody = "네트워크 연결을 확인하고 다시 시도해보세요."
     static let backToMap = "지도"
     static let inputHeading = "어디로 이동하세요?"
     static let origin = "출발"
