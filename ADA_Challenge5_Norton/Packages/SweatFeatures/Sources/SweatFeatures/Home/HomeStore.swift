@@ -32,6 +32,7 @@ public final class HomeStore {
     private let location: any LocationProviding
     private let locationName: any LocationNameProviding
     private let profile: () -> UserProfile
+    private var isLoading = false
 
     public init(
         repository: WeatherRepository,
@@ -79,6 +80,10 @@ public final class HomeStore {
     // MARK: 불러오기
 
     public func load() async {
+        guard !isLoading else { return }
+        isLoading = true
+        defer { isLoading = false }
+
         phase = observation == nil ? .loading : phase
 
         let coordinate: Coordinate

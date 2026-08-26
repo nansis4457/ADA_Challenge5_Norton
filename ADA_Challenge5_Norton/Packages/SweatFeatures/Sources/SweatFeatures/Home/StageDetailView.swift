@@ -30,6 +30,8 @@ public struct StageDetailView: View {
                     Text(DetailCopy.back)
                         .sweatType(.body14)
                         .foregroundStyle(Accent.deep)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(.rect)
                 }
 
                 Text(DetailCopy.heading(stage: stage))

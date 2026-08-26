@@ -79,7 +79,8 @@ struct HourlyForecastSection: View {
                     Text("\(Int(hour.relativeHumidity))%")
                         .sweatType(.caption13).foregroundStyle(Ink.n600)
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(accessibilityLabel(hour))
             }
         }
         .padding(.horizontal, Space.gutter)
@@ -106,7 +107,7 @@ struct HourlyForecastSection: View {
         .background(isCurrent ? Surface.accentWash : Color.clear,
                     in: RoundedRectangle(cornerRadius: Radius.lg))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(time(hour.date)), \(HomeCopy.Forecast.levelName(level(hour))), \(temperature(hour))")
+        .accessibilityLabel(accessibilityLabel(hour))
     }
 
     private func level(_ hour: HourlyForecast) -> ForecastLevel {
@@ -118,12 +119,22 @@ struct HourlyForecastSection: View {
     private func temperature(_ hour: HourlyForecast) -> String {
         "\(hour.temperature.formatted(.number.precision(.fractionLength(1))))°"
     }
+
+    private func accessibilityLabel(_ hour: HourlyForecast) -> String {
+        HomeCopy.Forecast.hourLabel(
+            time(hour.date),
+            level(hour),
+            temperature: temperature(hour),
+            humidity: Int(hour.relativeHumidity)
+        )
+    }
 }
 
 /// 주간 예보 (R6).
 struct WeeklyForecastSection: View {
     let daily: [DailyForecast]
     let profile: HomeStore
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     private var visible: [DailyForecast] { Array(daily.prefix(7)) }
 
@@ -142,11 +153,17 @@ struct WeeklyForecastSection: View {
                 .foregroundStyle(Ink.n900)
                 .padding(.bottom, Space.x2)
 
-            columnLabels
-                .padding(.bottom, 6)
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: Space.x2) {
+                    ForEach(visible, id: \.date) { day in accessibilityRow(day) }
+                }
+            } else {
+                columnLabels
+                    .padding(.bottom, 6)
 
-            VStack(spacing: 2) {
-                ForEach(visible, id: \.date) { day in row(day) }
+                VStack(spacing: 2) {
+                    ForEach(visible, id: \.date) { day in row(day) }
+                }
             }
 
             // 시간별 예보가 닿지 않는 날이 섞여 있으면 밝힌다 (「추정치는 추정치로」).
@@ -228,6 +245,37 @@ struct WeeklyForecastSection: View {
         .accessibilityLabel(HomeCopy.Forecast.dayLabel(weekday(day.date), level,
                                                        low: Int(day.lowTemperature),
                                                        high: Int(day.highTemperature)))
+    }
+
+    /// 큰 글씨에서는 고정 폭 열과 온도 막대를 버리고 한 문장씩 보여준다.
+    private func accessibilityRow(_ day: DailyForecast) -> some View {
+        let stage = profile.stage(forApparent: day.apparentHigh)
+        let level = ForecastLevel(stage)
+        let isToday = Calendar.current.isDateInToday(day.date)
+        let label = HomeCopy.Forecast.dayLabel(
+            weekday(day.date),
+            level,
+            low: Int(day.lowTemperature),
+            high: Int(day.highTemperature)
+        )
+
+        return HStack(alignment: .top, spacing: Space.x3) {
+            WeatherFace(level: level.rawValue, size: 28)
+            Text(label)
+                .sweatType(.body14)
+                .foregroundStyle(Ink.n900)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.vertical, Space.x2)
+        .padding(.horizontal, Space.x2)
+        .background {
+            if isToday {
+                RoundedRectangle(cornerRadius: Radius.lg)
+                    .fill(Surface.accentWash)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
     }
 
     private func weekday(_ date: Date) -> String {

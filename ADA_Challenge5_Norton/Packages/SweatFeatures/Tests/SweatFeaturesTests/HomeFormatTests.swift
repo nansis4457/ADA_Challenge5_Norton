@@ -36,4 +36,20 @@ struct HomeFormatTests {
         let text = HomeCopy.Format.weekday(sample)
         #expect("월화수목금토일".contains(text), "\(text)")
     }
+
+    @Test("시간별 예보 접근성 문구가 모든 열 이름을 포함한다")
+    func hourlyAccessibilityLabelNamesEveryValue() {
+        let text = HomeCopy.Forecast.hourLabel(
+            "오전 10시",
+            .sweaty,
+            temperature: "27도",
+            humidity: 70
+        )
+
+        for label in [HomeCopy.Forecast.stageColumn,
+                      HomeCopy.Forecast.temperatureColumn,
+                      HomeCopy.Forecast.humidityColumn] {
+            #expect(text.contains(label), "\(label)이 빠졌다: \(text)")
+        }
+    }
 }
