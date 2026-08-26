@@ -10,6 +10,11 @@ enum RouteCopy {
     static let origin = "출발"
     static let destination = "도착"
     static let departure = "출발 시간"
+    static let currentLocationAction = "현재 위치를 출발지로 사용"
+    static let locatingCurrentLocation = "현재 위치를 확인하고 있어요"
+    static let currentLocationName = "현재 위치"
+    static let currentLocationDenied = "위치 권한이 꺼져 있어요. 출발지를 직접 검색해주세요."
+    static let currentLocationUnavailable = "현재 위치를 확인하지 못했어요. 출발지를 직접 검색해주세요."
     static let calculate = "경로 계산하기"
     static let inputNote = "데이터가 있는 경로에서는 그늘·실내 구간 비중과 예상 실외 노출 시간을 함께 계산해요."
     static let searching = "장소를 찾고 있어요"
@@ -19,6 +24,11 @@ enum RouteCopy {
     static let routeFailed = "도보 경로를 가져오지 못했어요. 잠시 후 다시 시도해보세요."
     static let routeUnavailable = "도보 경로를 찾지 못했어요. 출발지나 도착지를 바꿔보세요."
     static let retry = "다시 시도"
+
+    static func selectionStatus(field: String, place: String?) -> String {
+        if let place { return "\(field)지 선택 완료: \(place)" }
+        return "\(field)지를 검색 결과에서 선택해주세요."
+    }
 
     static let modifyRoute = "경로 수정"
     static let lessExposureHeading = "실외 노출이 적을 것으로 예상돼요"

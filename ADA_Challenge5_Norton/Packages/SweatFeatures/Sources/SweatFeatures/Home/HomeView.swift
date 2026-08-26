@@ -87,18 +87,33 @@ public struct HomeView: View {
             Text(placeName)
                 .sweatType(.bodyStrong16)
                 .foregroundStyle(Ink.n900)
-            HStack(spacing: Space.x1) {
-                Text(HomeCopy.observedAt(HomeCopy.Format.time(observation.observedAt)))
-                if let minutes = store.minutesSinceObservation, minutes >= 30 {
-                    // 오래된 값을 최신인 척 보여주지 않는다.
-                    Text("· \(HomeCopy.staleBadge(minutes: minutes))")
-                        .foregroundStyle(Magenta.deep)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Space.x1) {
+                    observationTime(observation)
+                    staleBadge
+                }
+                VStack(spacing: Space.x1) {
+                    observationTime(observation)
+                    staleBadge
                 }
             }
             .sweatType(.caption12)
             .foregroundStyle(Ink.n400)
         }
         .padding(.top, Space.x4)
+    }
+
+    private func observationTime(_ observation: WeatherObservation) -> some View {
+        Text(HomeCopy.observedAt(HomeCopy.Format.time(observation.observedAt)))
+    }
+
+    @ViewBuilder
+    private var staleBadge: some View {
+        if let minutes = store.minutesSinceObservation, minutes >= 30 {
+            // 오래된 값을 최신인 척 보여주지 않는다.
+            Text(HomeCopy.staleBadge(minutes: minutes))
+                .foregroundStyle(Magenta.deep)
+        }
     }
 
     private var placeName: String {
@@ -113,6 +128,8 @@ public struct HomeView: View {
                 Text(HomeCopy.detailLink)
                     .sweatType(.label14Medium)
                     .foregroundStyle(Accent.base)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(.rect)
             }
         }
         .padding(.horizontal, Space.gutter)

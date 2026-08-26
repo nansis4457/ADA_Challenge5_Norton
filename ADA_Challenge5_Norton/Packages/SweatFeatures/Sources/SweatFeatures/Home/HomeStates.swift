@@ -91,7 +91,8 @@ struct AttributionBlock: View {
             }
             .frame(height: 14)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+        .contentShape(.rect)
         .accessibilityLabel(info.serviceName)
         .accessibilityHint(HomeCopy.attributionHint)
     }

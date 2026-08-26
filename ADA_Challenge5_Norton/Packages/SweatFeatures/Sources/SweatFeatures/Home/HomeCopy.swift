@@ -105,6 +105,12 @@ public enum HomeCopy {
                                     low: Int, high: Int) -> String {
             "\(weekday), \(levelName(level)), 최저 \(low)도, 최고 \(high)도"
         }
+
+        /// VoiceOver가 읽는 시간별 예보 한 칸.
+        public static func hourLabel(_ time: String, _ level: ForecastLevel,
+                                     temperature: String, humidity: Int) -> String {
+            "\(time), 땀 단계 \(levelName(level)), 기온 \(temperature), 습도 \(humidity)%"
+        }
     }
 
     /// VoiceOver가 읽는 마스코트.
@@ -134,6 +140,7 @@ public enum HomeCopy {
     public static var allStrings: [String] {
         var result = [detailLink, attributionHint, observedAt("오전 8:00"), staleBadge(minutes: 12),
                       Forecast.estimatedNote,
+                      Forecast.hourLabel("오전 8시", .sweaty, temperature: "27도", humidity: 70),
                       Forecast.dayLabel("금", .sweaty, low: 26, high: 33),
                       mascotLabel(stage: 3, state: "땀 불편 높음", headline: "오늘은 땀이 많이 날 수 있어요"),
                       Location.deferredTitle, Location.deferredBody,

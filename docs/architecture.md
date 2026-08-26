@@ -391,18 +391,19 @@ struct UserProfile: Codable, Sendable {
     var usesCurrentLocation: Bool
     var wantsNotification: Bool
     var calibrationOffset: Double
-    var humidityBoost: Double
+    var humidityBoost: Double      // 이전 저장 호환용. 계산에는 사용하지 않음
     var notificationHour: Int
     var hasCompletedOnboarding: Bool
 }
 
 @Model final class SweatLog {
+    @Attribute(.unique) var dayKey: String
     var date: Date
     var predictedStage: Int
     var actualScore: Int          // 1...5
     var tags: [String]
-    var apparentTemp: Double
-    var humidity: Double
+    var apparentTemperature: Double
+    var relativeHumidity: Double
     var windSpeed: Double
     var routeOutdoorMinutes: Int?
 }
@@ -411,18 +412,21 @@ struct UserProfile: Codable, Sendable {
 ### 보정 알고리즘
 
 ```swift
-func updateCalibration(logs: [SweatLog], profile: UserProfile) {
-    let alpha = 0.25
-    let highHumidity = logs.filter { $0.humidity >= 70 }
-    guard highHumidity.count >= 5 else { return }          // 규칙 「기록이 예측을 고친다」
-    let error = highHumidity.map { Double($0.actualScore - $0.predictedStage) }
-    let mean = error.reduce(0, +) / Double(error.count)
-    let next = (1 - alpha) * profile.humidityBoost + alpha * mean
-    profile.humidityBoost = min(max(next, -1.5), 1.5)      // 규칙 「기록이 예측을 고친다」
+func updateCalibration(samples: [CalibrationSample], profile: inout UserProfile) {
+    let result = CalibrationEngine.evaluate(
+        samples: samples,
+        currentCalibration: profile.calibrationOffset
+    )
+    guard result.hasEnoughSamples else { return }          // 규칙 「기록이 예측을 고친다」
+    profile.calibrationOffset = result.nextCalibration     // -1.5...1.5℃
 }
 ```
 
-화면 12의 `평균 0.6단계 높았습니다` 문구는 이 값에서 생성한다.
+`CalibrationEngine`은 습도 70% 이상인 과거 기록만 학습 표본으로 고른다. 습도는 이미
+체감온도에 들어갔으므로 현재 단계에 다시 더하지 않는다. 5건부터
+`next = 0.75 × previous + 0.25 × meanStageDifference`를 적용하고 ±1.5℃로 제한한다.
+화면 12의 평균 단계 차이는 학습 근거 설명이며, 실제 단계 계산에는 ℃ 단위
+`calibrationOffset`만 들어간다. *(결정 2026-08-26 — 005 구현 시.)*
 
 ---
 

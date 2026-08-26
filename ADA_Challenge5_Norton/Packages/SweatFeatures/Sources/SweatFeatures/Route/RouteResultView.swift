@@ -67,6 +67,8 @@ struct RouteResultView: View {
                     .sweatType(.body14)
             }
             .foregroundStyle(Accent.deep)
+            .frame(minHeight: 44)
+            .contentShape(.rect)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(RouteCopy.modifyRoute)
@@ -107,6 +109,7 @@ struct RouteResultView: View {
                 .foregroundStyle(OnColor.accent)
                 .padding(.vertical, Space.x2)
                 .padding(.horizontal, Space.x4)
+                .frame(minHeight: 44)
                 .background(Magenta.base, in: RoundedRectangle(cornerRadius: Radius.lg, style: .continuous))
                 .padding(.top, Space.x2)
             }
@@ -187,23 +190,39 @@ private struct WaypointRow: View {
     let time: String
     let title: String
     let detail: String
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: Space.x3) {
-            Text(time)
-                .sweatType(.caption13)
-                .foregroundStyle(Ink.n400)
-                .frame(width: 44, alignment: .leading)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title)
-                    .sweatType(.bodyStrong15)
-                    .foregroundStyle(Ink.n900)
-                Text(detail)
-                    .sweatType(.caption13)
-                    .foregroundStyle(Ink.n600)
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: Space.x1) {
+                    Text(time)
+                        .sweatType(.caption13)
+                        .foregroundStyle(Ink.n400)
+                    waypoint
+                }
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: Space.x3) {
+                    Text(time)
+                        .sweatType(.caption13)
+                        .foregroundStyle(Ink.n400)
+                        .frame(width: 44, alignment: .leading)
+                    waypoint
+                }
             }
         }
         .accessibilityElement(children: .combine)
+    }
+
+    private var waypoint: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title)
+                .sweatType(.bodyStrong15)
+                .foregroundStyle(Ink.n900)
+            Text(detail)
+                .sweatType(.caption13)
+                .foregroundStyle(Ink.n600)
+        }
     }
 }
 

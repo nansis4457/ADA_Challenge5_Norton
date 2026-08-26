@@ -5,6 +5,7 @@ import PackageDescription
 // 이렇게 나누면 001에서 005로 넘어갈 때 마이그레이션이 생기지 않는다.
 let package = Package(
     name: "SweatPersistence",
+    platforms: [.iOS(.v26), .macOS(.v26)],
     products: [
         .library(name: "SweatPersistence", targets: ["SweatPersistence"])
     ],

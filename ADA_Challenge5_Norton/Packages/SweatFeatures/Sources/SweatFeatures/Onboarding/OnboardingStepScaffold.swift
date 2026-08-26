@@ -22,6 +22,8 @@ struct OnboardingStepScaffold<Content: View, Actions: View>: View {
                         Text(OnboardingCopy.backToProfile)
                             .sweatType(.body14)
                             .foregroundStyle(Accent.deep)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(.rect)
                     }
                     .padding(.bottom, Space.x3 + 2)
                 }

@@ -10,7 +10,7 @@
 | 002 | [홈 · 등급 상세](002-home/spec.md) | 04, 05 | **Implemented** | `002-weather` |
 | 003 | [지도 · 경로 · 실내외 비율](003-route/spec.md) | 06–08 | **In Progress** · MapKit 1차 구현 완료 | `003-route` |
 | 004 | [이동 중 · Live Activity](004-move/spec.md) | 09 | **In Progress** · 자동 검증 완료, 실기기 대기 | `004-move` |
-| 005 | 마이페이지 · 자가 기록 · 지수 개선 | 10–12 | 미작성 | |
+| 005 | [마이페이지 · 자가 기록 · 지수 개선](005-profile-log/spec.md) | 10–12 | **Implemented** | `005-profile-log` |
 
 > **줄높이 처리 방식은 결정됐다** — SwiftUI 기본 조판을 따른다 (`docs/design-source.md`).
 > 남은 둘(토큰 밖 여백 · Chip 터치 타깃)은 001의 `spec.md`의 구현 계획을 쓰기 전에 정한다.

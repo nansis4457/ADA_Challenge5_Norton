@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import SweatPersistence
 import WeatherData
 import SweatDomain
@@ -37,19 +38,29 @@ public struct RootView: View {
     }
 
     public var body: some View {
-        switch screen {
-        case .onboarding(let mode):
-            OnboardingView(flow: OnboardingFlow(store: store, mode: mode, location: location) {
-                profile = store.load()
-                screen = .home
-            })
-            // 모드가 바뀌면 흐름을 새로 만든다. 같은 인스턴스를 재사용하면 이전 단계가 남는다.
-            .id(mode)
+        Group {
+            switch screen {
+            case .onboarding(let mode):
+                OnboardingView(flow: OnboardingFlow(store: store, mode: mode, location: location) {
+                    profile = store.load()
+                    screen = .home
+                })
+                // 모드가 바뀌면 흐름을 새로 만든다. 같은 인스턴스를 재사용하면 이전 단계가 남는다.
+                .id(mode)
 
-        case .home:
-            let store = home ?? HomeStore(repository: weather, location: location) { profile }
-            MainTabView(home: store)
-            .onAppear { if home == nil { home = store } }
+            case .home:
+                let homeStore = home ?? HomeStore(repository: weather, location: location) { profile }
+                MainTabView(
+                    home: homeStore,
+                    profileStore: store,
+                    location: location,
+                    profile: { profile }
+                ) { updated in
+                    profile = updated
+                }
+                .onAppear { if home == nil { home = homeStore } }
+            }
         }
+        .modelContainer(for: SweatLog.self)
     }
 }

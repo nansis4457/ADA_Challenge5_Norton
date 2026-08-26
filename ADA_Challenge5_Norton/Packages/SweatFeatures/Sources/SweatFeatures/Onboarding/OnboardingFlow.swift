@@ -10,11 +10,13 @@ import SweatPersistence
 @Observable
 public final class OnboardingFlow {
 
-    public enum Step: Int, CaseIterable {
+    public enum Step: Int, CaseIterable, Hashable, Identifiable {
         case sensitivity = 0
         case movement
         case location
         case notification
+
+        public var id: Self { self }
     }
 
     public enum Mode: Hashable {

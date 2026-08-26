@@ -11,6 +11,7 @@ final class RouteStore {
 
     enum Activity: Sendable, Equatable {
         case idle
+        case locating
         case searching
         case resolving
         case calculating
@@ -36,11 +37,14 @@ final class RouteStore {
     private(set) var completedSearch = false
     private(set) var routes: [WalkingRoute] = []
     private(set) var selectedRouteID: UUID?
+    private(set) var locationOutcome: LocationOutcome?
 
     private let placeSearch: any PlaceSearching
     private let routeSource: any WalkingRouteProviding
     private let exposureAnalyzer: any ExposureAnalyzing
     private let stage: () -> SweatStage
+    private let location: any LocationProviding
+    private let automaticallyUsesCurrentLocation: Bool
     private let searchDelay: Duration
     private var searchTask: Task<Void, Never>?
 
@@ -48,6 +52,8 @@ final class RouteStore {
         placeSearch: any PlaceSearching = MapKitPlaceSearch(),
         routeSource: any WalkingRouteProviding = MapKitWalkingRouteSource(),
         exposureAnalyzer: any ExposureAnalyzing = NoCoverageExposureAnalyzer(),
+        location: any LocationProviding = SystemLocationProvider(),
+        automaticallyUsesCurrentLocation: Bool = true,
         searchDelay: Duration = .milliseconds(250),
         stage: @escaping () -> SweatStage
     ) {
@@ -57,12 +63,44 @@ final class RouteStore {
         self.placeSearch = placeSearch
         self.routeSource = routeSource
         self.exposureAnalyzer = exposureAnalyzer
+        self.location = location
+        self.automaticallyUsesCurrentLocation = automaticallyUsesCurrentLocation
         self.searchDelay = searchDelay
         self.stage = stage
     }
 
     var canCalculate: Bool {
         origin != nil && destination != nil && activity != .calculating
+    }
+
+    var selectedOriginName: String? { origin?.name }
+    var selectedDestinationName: String? { destination?.name }
+
+    func prepareCurrentLocationIfNeeded() async {
+        guard automaticallyUsesCurrentLocation, origin == nil, originQuery.isEmpty else { return }
+        await useCurrentLocation()
+    }
+
+    func useCurrentLocation() async {
+        guard activity != .locating else { return }
+        searchTask?.cancel()
+        placeSearch.cancel()
+        activity = .locating
+        issue = nil
+
+        let outcome = await location.currentLocation()
+        locationOutcome = outcome
+        switch outcome {
+        case .located(let coordinate):
+            origin = RoutePlace(name: RouteCopy.currentLocationName, coordinate: coordinate)
+            originQuery = RouteCopy.currentLocationName
+            activeField = nil
+            suggestions = []
+            completedSearch = false
+        case .deferred, .denied, .unavailable:
+            break
+        }
+        activity = .idle
     }
 
     var selectedRoute: WalkingRoute? {
@@ -87,6 +125,7 @@ final class RouteStore {
         let query = query(for: field).trimmingCharacters(in: .whitespacesAndNewlines)
         if selectedPlace(for: field)?.name != query {
             setSelectedPlace(nil, for: field)
+            if field == .origin { locationOutcome = nil }
         } else if !query.isEmpty {
             suggestions = []
             activity = .idle

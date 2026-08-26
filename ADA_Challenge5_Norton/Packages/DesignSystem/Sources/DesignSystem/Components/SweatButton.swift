@@ -16,7 +16,9 @@ public struct SweatButton: View {
 
         var background: Color? {
             switch self {
-            case .primary: Accent.base
+            // 흰 글자와 4.5:1 이상 대비가 나는 상호작용 색을 쓴다.
+            // `accent/base`는 흰색과 4.08:1이라 본문 크기 버튼 문구에 부족하다.
+            case .primary: Accent.deep
             case .dark:    Ink.n900
             case .ghost:   nil
             }
